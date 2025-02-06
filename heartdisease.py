@@ -7,10 +7,10 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
 from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder
 
 
-titanic = pd.read_csv('titanic.csv')
+heartdisease = pd.read_csv('heartdisease.csv')
 
 # Título de la aplicación
-st.title("Exploración de datos: Titanic")
+st.title("Exploración de datos: Heart Disease")
 st.image('titanic.jpg', caption="Titanic")
 # Descripción inicial
 
