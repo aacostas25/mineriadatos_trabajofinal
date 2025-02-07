@@ -127,7 +127,7 @@ if st.sidebar.checkbox("Matriz de correlacion"):
     st.write("### Matriz de correlacion")
     # Filtrar solo las columnas numéricas
     heartdisease_num = heartdisease.select_dtypes(include=['float64', 'int64'])
-    variables_objetivo = ['Age','Weight','Length', 'BMI', 'BP','PR','FBS','CR','TG','LDL','HDL','BUN','ESR','HB','K','Na','WBC','Lymph','Neut','PIT','EF.TTE']
+    variables_objetivo = ['Age','Weight','Length', 'BMI', 'BP','PR','FBS','CR','TG','LDL','HDL','BUN','ESR','HB','K','Na','WBC','Lymph','Neut','PLT','EF-TTE']
     # Calcular la matriz de correlación
     correlacion = heartdisease_num[variables_objetivo].corr()
     
