@@ -130,10 +130,17 @@ if st.sidebar.checkbox("Matriz de correlacion"):
     variables_objetivo = ['Age','Weight','Length', 'BMI', 'BP','PR','FBS','CR','TG','LDL','HDL','BUN','ESR','HB','K','Na','WBC','Lymph','Neut','PLT','EF-TTE']
     # Calcular la matriz de correlación
     correlacion = heartdisease_num[variables_objetivo].corr()
-    
+    # Create a mask using numpy's triu function
+    mask = np.triu(np.ones_like(correlacion, dtype=bool))
     # Configuración de la gráfica
-    plt.figure(figsize=(10, 8))  # Tamaño de la figura
-    sns.heatmap(correlacion, annot=True, cmap='coolwarm', fmt='.2f', cbar=True, square=True)
+    # Create a masked heatmap
+    plt.figure(figsize = (10,8))
+    plt.rcParams.update({'font.size': 12})
+    sns.heatmap(correlacion, cmap = 'coolwarm', vmin = -1, vmax = 1, center = 0, annot=True, fmt=".2f", square=True, linewidths=.5, mask = mask)
+    plt.show()
+
+    #plt.figure(figsize=(10, 8))  # Tamaño de la figura
+    #sns.heatmap(correlacion, annot=True, cmap='coolwarm', fmt='.2f', cbar=True, square=True)
     
     # Título de la gráfica
     plt.title('Matriz de Correlación de Heart Disease')
