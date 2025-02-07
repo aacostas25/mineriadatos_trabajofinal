@@ -187,8 +187,8 @@ if st.sidebar.checkbox("Datos categoricos"):
     # Función para aplicar la codificación
     def apply_encoding(data, strategy):
         categorical_cols = data.select_dtypes(exclude=['int64', 'float64']).columns
-        st.write(f'{categorical_cols})
-        st.write(f'{len(categorical_cols)})
+        st.write(f'{categorical_cols}')
+        st.write(f'{len(categorical_cols)}')
         if len(categorical_cols) == 0:
             st.warning("No hay columnas categóricas en los datos.")
             return data
