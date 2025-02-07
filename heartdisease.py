@@ -291,28 +291,27 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
                 break
 
     if model_path:
-            # Cargar el modelo
-            st.info("Cargando modelo...")
-            model = tf.keras.models.load_model(model_path)
-            st.success("Modelo cargado correctamente.")
-            X = heartdisease.iloc[:, :-1]
-            y = heartdisease['Cath']
-            X_encoded = pd.get_dummies(X, drop_first=True,dtype= int)
-            scaler = StandardScaler()
-            X_scaled = scaler.fit_transform(X_encoded)
-            label_encoder = LabelEncoder()
-            y_encoded = label_encoder.fit_transform(y)
-            X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_encoded, test_size=0.2, random_state=42)
+        # Cargar el modelo
+        st.info("Cargando modelo...")
+        model = tf.keras.models.load_model(model_path)
+        st.success("Modelo cargado correctamente.")
+        X = heartdisease.iloc[:, :-1]
+        y = heartdisease['Cath']
+        X_encoded = pd.get_dummies(X, drop_first=True,dtype= int)
+        scaler = StandardScaler()
+        X_scaled = scaler.fit_transform(X_encoded)
+        label_encoder = LabelEncoder()
+        y_encoded = label_encoder.fit_transform(y)
+        X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_encoded, test_size=0.2, random_state=42)
 
-            input_data = X_train.iloc[0, :-1].values.reshape(1, -1)  # Excluir la última columna si es la etiqueta
-            st.write("Datos de entrada:", input_data)
+        input_data = X_train.iloc[0, :-1].values.reshape(1, -1)  # Excluir la última columna si es la etiqueta
+        st.write("Datos de entrada:", input_data)
 
-            # Realizar predicción
-            prediction = model.predict(input_data)
-            st.write("Predicción del modelo:", prediction)
-
-        else:
-            st.error("No se encontró un archivo .h5 en el ZIP. Verifica el contenido.")
+        # Realizar predicción
+        prediction = model.predict(input_data)
+        st.write("Predicción del modelo:", prediction)
+    else:
+        st.error("No se encontró un archivo .h5 en el ZIP. Verifica el contenido.")
     
 
     
