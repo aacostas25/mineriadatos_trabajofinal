@@ -305,7 +305,7 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
         y_encoded = label_encoder.fit_transform(y)
         X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_encoded, test_size=0.2, random_state=42)
 
-        input_data = X_train.iloc[0, :-1].values.reshape(1, -1)  # Excluir la última columna si es la etiqueta
+        input_data = X_train[0].reshape(1, -1)  # Excluir la última columna si es la etiqueta
         st.write("Datos de entrada:", input_data)
 
         # Realizar predicción
