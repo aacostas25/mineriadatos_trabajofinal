@@ -137,7 +137,7 @@ if st.sidebar.checkbox("Matriz de correlacion"):
     # Create a masked heatmap
     plt.figure(figsize = (10,8))
     plt.rcParams.update({'font.size': 12})
-    sns.heatmap(correlacion, cmap = 'coolwarm', vmin = -1, vmax = 1, center = 0, annot=True, fmt=".2f", square=True, linewidths=.5, mask = mask)
+    sns.heatmap(correlacion, cmap = 'coolwarm', annot_kws={"size": 7},vmin = -1, vmax = 1, center = 0, annot=True, fmt=".2f", square=True, linewidths=.5, mask = mask)
     plt.show()
 
     #plt.figure(figsize=(10, 8))  # Tamaño de la figura
