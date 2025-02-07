@@ -177,7 +177,36 @@ st.sidebar.header("Transformacion datos")
 if 'heartdisease_copy' not in st.session_state:
     st.session_state.heartdisease_copy = heartdisease.copy()
 
+df_2 = st.session_state.heartdisease_copy.copy()
 
+if st.sidebar.checkbox("Transformar datos categóricos"):
+    estrategias = ['Ordinal Encoder', 'OneHot Encoder']
+    estrategia = st.selectbox('Selecciona una estrategia de codificación:', estrategias)
+    
+    # Seleccionar columnas categóricas
+    categorical_cols = df_2.select_dtypes(exclude=['number']).columns.tolist()
+    
+    if not categorical_cols:
+        st.warning("No hay columnas categóricas en los datos.")
+    else:
+        st.write(f"Columnas categóricas encontradas: {categorical_cols}")
+        
+        if estrategia == 'Ordinal Encoder':
+            encoder = OrdinalEncoder()
+            df_2[categorical_cols] = encoder.fit_transform(df_2[categorical_cols])
+        elif estrategia == 'OneHot Encoder':
+            encoder = OneHotEncoder(sparse_output=False, drop='first')
+            encoded_data = pd.DataFrame(
+                encoder.fit_transform(df_2[categorical_cols]),
+                columns=encoder.get_feature_names_out(categorical_cols),
+                index=df_2.index
+            )
+            df_2 = df_2.drop(columns=categorical_cols).join(encoded_data)
+        
+        st.session_state.heartdisease_copy = df_2.copy()
+        
+        st.write("### Datos transformados")
+        st.dataframe(df_2.head())
 df_2 = st.session_state.heartdisease_copy.copy()  # Trabajar sobre una copia del DataFrame
 
 if st.sidebar.checkbox("Datos categoricos"):
