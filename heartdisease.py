@@ -177,65 +177,93 @@ st.sidebar.header("Transformacion datos")
 if 'heartdisease_copy' not in st.session_state:
     st.session_state.heartdisease_copy = heartdisease.copy()
 
-# Estrategias disponibles
-estrategias = ['Media', 'Mediana', 'Moda', 'Eliminar filas', 'Eliminar columna', 'KNN Imputación']
-if st.sidebar.checkbox("Imputacion de datos"):
-    # Crear selectboxes para seleccionar estrategias
-    fare_strategy = st.selectbox('Estrategia para Fare:', estrategias, index=estrategias.index('Media'))
-    age_strategy = st.selectbox('Estrategia para Age:', estrategias, index=estrategias.index('Media'))
-    cabin_strategy = st.selectbox('Estrategia para Cabin:', estrategias, index=estrategias.index('Media'))
+
+df_2 = st.session_state.heartdisease_copy.copy()  # Trabajar sobre una copia del DataFrame
+
+if st.sidebar.checkbox("Datos categoricos"):
+    # Estrategias de codificación disponibles
+    estrategias2 = ['Ordinal Encoder', 'OneHot Encoder']
     
-    # Botón para aplicar las estrategias
-    if st.button('Aplicar estrategias'):
-        df_2 = st.session_state.heartdisease_copy.copy()  # Trabajar sobre una copia del DataFrame
+    # Crear un selectbox para seleccionar la estrategia de codificación
+    strategy2 = st.selectbox('Selecciona una estrategia de codificación:', estrategias2, index=0)
     
-        # Imputador KNN (se aplicará solo si es seleccionado)
-        knn_imputer = KNNImputer(n_neighbors=5)
+    # Función para aplicar la codificación
+    def apply_encoding(data, strategy):
+        categorical_cols = data.select_dtypes(include=['object']).columns
     
-        # Aplicar estrategia para 'Fare'
-        if fare_strategy == 'Media':
-            df_2['Fare'].fillna(df_2['Fare'].mean(), inplace=True)
-        elif fare_strategy == 'Mediana':
-            df_2['Fare'].fillna(df_2['Fare'].median(), inplace=True)
-        elif fare_strategy == 'Moda':
-            df_2['Fare'].fillna(df_2['Fare'].mode()[0], inplace=True)
-        elif fare_strategy == 'Eliminar filas':
-            df_2.dropna(subset=['Fare'], inplace=True)
-        elif fare_strategy == 'Eliminar columna':
-            df_2.drop(columns=['Fare'], inplace=True)
-        elif fare_strategy == 'KNN Imputación':
-            df_2[['Fare']] = knn_imputer.fit_transform(df_2[['Fare']])
+        if len(categorical_cols) == 0:
+            st.warning("No hay columnas categóricas en los datos.")
+            return data
     
-        # Aplicar estrategia para 'Age'
-        if age_strategy == 'Media':
-            df_2['Age'].fillna(df_2['Age'].mean(), inplace=True)
-        elif age_strategy == 'Mediana':
-            df_2['Age'].fillna(df_2['Age'].median(), inplace=True)
-        elif age_strategy == 'Moda':
-            df_2['Age'].fillna(df_2['Age'].mode()[0], inplace=True)
-        elif age_strategy == 'Eliminar filas':
-            df_2.dropna(subset=['Age'], inplace=True)
-        elif age_strategy == 'Eliminar columna':
-            df_2.drop(columns=['Age'], inplace=True)
-        elif age_strategy == 'KNN Imputación':
-            df_2[['Age']] = knn_imputer.fit_transform(df_2[['Age']])
+        data_copy = data.copy()
     
-        # Aplicar estrategia para 'Cabin'
-        if cabin_strategy == 'Media':
-            df_2['Cabin'].fillna(df_2['Cabin'].mean(), inplace=True)
-        elif cabin_strategy == 'Mediana':
-            df_2['Cabin'].fillna(df_2['Cabin'].median(), inplace=True)
-        elif cabin_strategy == 'Moda':
-            df_2['Cabin'].fillna(df_2['Cabin'].mode()[0], inplace=True)
-        elif cabin_strategy == 'Eliminar filas':
-            df_2.dropna(subset=['Cabin'], inplace=True)
-        elif cabin_strategy == 'Eliminar columna':
-            df_2.drop(columns=['Cabin'], inplace=True)
-        elif cabin_strategy == 'KNN Imputación':
-            df_2[['Cabin']] = knn_imputer.fit_transform(df_2[['Cabin']])
+        if strategy2 == 'Ordinal Encoder':
+            encoder = OrdinalEncoder()
+            data_copy[categorical_cols] = encoder.fit_transform(data_copy[categorical_cols])
+        elif strategy2 == 'OneHot Encoder':
+            encoder = OneHotEncoder(sparse_output=False)
+            encoded_data = pd.DataFrame(encoder.fit_transform(data_copy[categorical_cols]),
+                                        columns=encoder.get_feature_names_out(categorical_cols),
+                                        index=data_copy.index)
+            data_copy = data_copy.drop(categorical_cols, axis=1)
+            data_copy = pd.concat([data_copy, encoded_data], axis=1)
+    
+        return data_copy
+    
+    # Botón para aplicar la estrategia de codificación
+    if st.button('Aplicar Estrategia de Codificación'):
+        non_numeric_columns = heart_disease.select_dtypes(exclude=['number']).columns
+        columns_to_drop = non_numeric_columns
+        try:
+            data = heart_disease_copy.drop(columns=[col for col in columns_to_drop if col in heart_disease_copy.columns])
+        except NameError:
+            data = heart_disease.drop(columns=[col for col in columns_to_drop if col in heart_disease.columns])
+        encoded_data = apply_encoding(data, strategy2)
         
-        # Mostrar los primeros 5 registros después de la imputación
-        st.write("### Datos después de aplicar la imputación")
-        st.write(df_2.head())
+        # Mostrar los datos codificados
+        st.write(f"Vista previa de los datos codificados usando '{strategy2}':")
+        st.dataframe(encoded_data.head())
+        st.write(f"Información de los datos codificados:")
+        st.write(encoded_data.info())
+        st.session_state.heartdisease_copy = encoded_data.copy()
+
+if st.sidebar.checkbox("Escalado de datos"):
+    st.write("### Escalado de datos")
+    # Estrategias disponibles
+    estrategias1 = ['Standard Scaler', 'MinMax Scaler', 'Robust Scaler']
+
+    # Crear selectbox para seleccionar estrategia
+    strategy = st.selectbox('Selecciona una estrategia de escalado:', estrategias1, index=0)
+    
+    # Función para aplicar el escalado
+    def apply_scaling(data, strategy):
+        numeric_cols = data.select_dtypes(include=['float64', 'int64']).columns
+    
+        if len(numeric_cols) == 0:
+            st.warning("No hay columnas numéricas en los datos.")
+            return data
+    
+        data_copy = data.copy()
+    
+        if strategy == 'Standard Scaler':
+            scaler = StandardScaler()
+            data_copy[numeric_cols] = scaler.fit_transform(data_copy[numeric_cols])
+        elif strategy == 'MinMax Scaler':
+            scaler = MinMaxScaler()
+            data_copy[numeric_cols] = scaler.fit_transform(data_copy[numeric_cols])
+        elif strategy == 'Robust Scaler':
+            scaler = RobustScaler()
+            data_copy[numeric_cols] = scaler.fit_transform(data_copy[numeric_cols])
+    
+        return data_copy
+    
+    # Botón para aplicar la estrategia
+    if st.button('Aplicar Estrategia de Escalado'):
+        
+        scaled_data = apply_scaling(st.session_state.heartdisease_copy, strategy)
+        
+        # Mostrar los datos escalados
+        st.write(f"Vista previa de los datos escalados usando '{strategy}':")
+        st.dataframe(scaled_data.head())
 
 
