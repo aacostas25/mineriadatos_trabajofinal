@@ -1,12 +1,16 @@
 import streamlit as st
+import os
+import zipfile
 import pandas as pd
 import seaborn as sns
 import numpy as np
+import tensorflow as tf
 import matplotlib.pyplot as plt
 from sklearn.impute import KNNImputer
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
 from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder
-
 
 heartdisease = pd.read_csv('heartdisease.csv')
 
@@ -265,5 +269,19 @@ if st.sidebar.checkbox("Escalado de datos"):
         # Mostrar los datos escalados
         st.write(f"Vista previa de los datos escalados usando '{strategy}':")
         st.dataframe(scaled_data.head())
-
-
+# Modelo de redes neuronales
+if st.sidebar.checkbox("Utilizar redes Neuronales"):
+    st.write("### Redes Neuronales")
+    
+    st.write("""
+    El modelo utilizado consiste en una red neuronal de una capa con 32 neuronas de entrada.
+    La base de datos fue codificada con One Hot Encoder y estandarizada con StandardScaler.
+    """)
+    X = basemedica.iloc[:, :-1]
+    y = basemedica['Cath']
+    X_encoded = pd.get_dummies(X, drop_first=True,dtype= int)
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X_encoded)
+    label_encoder = LabelEncoder()
+    y_encoded = label_encoder.fit_transform(y)
+    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_encoded, test_size=0.2, random_state=42)
