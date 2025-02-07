@@ -212,11 +212,11 @@ if st.sidebar.checkbox("Datos categoricos"):
     
     # Botón para aplicar la estrategia de codificación
     if st.button('Aplicar Estrategia de Codificación'):
-        columns_to_drop = heart_disease.select_dtypes(include=['object']).columns
+        columns_to_drop = heartdisease.select_dtypes(include=['object']).columns
         try:
-            data = heart_disease_copy.drop(columns=[col for col in columns_to_drop if col in heart_disease_copy.columns])
+            data = heartdisease_copy.drop(columns=[col for col in columns_to_drop if col in heartdisease_copy.columns])
         except NameError:
-            data = heart_disease.drop(columns=[col for col in columns_to_drop if col in heart_disease.columns])
+            data = heartdisease.drop(columns=[col for col in columns_to_drop if col in heartdisease.columns])
         encoded_data = apply_encoding(data, strategy2)
         
         # Mostrar los datos codificados
