@@ -213,7 +213,6 @@ if st.sidebar.checkbox("Datos categoricos"):
         columns_to_drop = list(heartdisease.select_dtypes(include=['object']).columns)
         st.write(f'Variables categoricas: {columns_to_drop}')
         st.write(f'Variables categoricas: {len(columns_to_drop)}')
-        st.write(heartdisease_copy.head())
         try:
             data = heartdisease.drop(columns=[col for col in columns_to_drop if col in heartdisease.columns])
         except NameError:
