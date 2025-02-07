@@ -277,6 +277,15 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
     El modelo utilizado consiste en una red neuronal de una capa con 32 neuronas de entrada.
     La base de datos fue codificada con One Hot Encoder y estandarizada con StandardScaler.
     """)
+    # Cargar el modelo entrenado
+    model = tf.keras.models.load_model("modelo_entrenado.h5")
+    st.write("Modelo cargado correctamente.")
+    
+    # Aquí puedes agregar código para hacer predicciones con el modelo
+    # Ejemplo de predicción:
+    # input_data = ...  # Tus datos de entrada
+    # prediction = model.predict(input_data)
+    # st.write(prediction)
     X = basemedica.iloc[:, :-1]
     y = basemedica['Cath']
     X_encoded = pd.get_dummies(X, drop_first=True,dtype= int)
