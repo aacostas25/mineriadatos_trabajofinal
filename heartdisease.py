@@ -212,7 +212,7 @@ if st.sidebar.checkbox("Datos categoricos"):
     
     # Botón para aplicar la estrategia de codificación
     if st.button('Aplicar Estrategia de Codificación'):
-        columns_to_drop = list(heartdisease.select_dtypes(include=['object']).columns)
+        columns_to_drop = list(heartdisease_copy.select_dtypes(include=['object']).columns)
         st.write(f'Variables categoricas: {columns_to_drop}')
         try:
             data = heartdisease_copy.drop(columns=[col for col in columns_to_drop if col in heartdisease_copy.columns])
