@@ -212,8 +212,7 @@ if st.sidebar.checkbox("Datos categoricos"):
     
     # Botón para aplicar la estrategia de codificación
     if st.button('Aplicar Estrategia de Codificación'):
-        non_numeric_columns = heart_disease.select_dtypes(exclude=['number']).columns
-        columns_to_drop = non_numeric_columns
+        columns_to_drop = heart_disease.select_dtypes(include=['object']).columns
         try:
             data = heart_disease_copy.drop(columns=[col for col in columns_to_drop if col in heart_disease_copy.columns])
         except NameError:
