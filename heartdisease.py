@@ -347,8 +347,7 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
             st.write("Predicción del modelo:", prediction)
         else:
             st.error("No se encontró un archivo .h5 en el ZIP. Verifica el contenido.")
-        
-        
+            
     if selected_column=='Manual':
         
 
