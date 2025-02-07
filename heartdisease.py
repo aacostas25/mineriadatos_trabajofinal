@@ -186,8 +186,9 @@ if st.sidebar.checkbox("Datos categoricos"):
     
     # Función para aplicar la codificación
     def apply_encoding(data, strategy):
-        categorical_cols = data.select_dtypes(exclude=['number']).columns
-    
+        categorical_cols = data.select_dtypes(exclude=['int64', 'float64']).columns
+        st.write(f'{categorical_cols})
+        st.write(f'{len(categorical_cols)})
         if len(categorical_cols) == 0:
             st.warning("No hay columnas categóricas en los datos.")
             return data
@@ -211,6 +212,7 @@ if st.sidebar.checkbox("Datos categoricos"):
     if st.button('Aplicar Estrategia de Codificación'):
         columns_to_drop = list(heartdisease.select_dtypes(include=['object']).columns)
         st.write(f'Variables categoricas: {columns_to_drop}')
+        st.write(f'Variables categoricas: {len(columns_to_drop)}')
         try:
             data = heartdisease_copy.drop(columns=[col for col in columns_to_drop if col in heartdisease_copy.columns])
         except NameError:
