@@ -349,6 +349,7 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
             st.error("No se encontró un archivo .h5 en el ZIP. Verifica el contenido.")
             
     if selected_column=='Manual':
+        st.write("")
         
 
     
