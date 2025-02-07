@@ -278,6 +278,7 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
     La base de datos fue codificada con One Hot Encoder y estandarizada con StandardScaler.
     """)
     zip_path = "modelo_entrenado_comprimido.zip"
+    extract_path = "modelo_descomprimido"
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
         zip_ref.extractall(extract_path)
         st.success("Descompresión completada.")
