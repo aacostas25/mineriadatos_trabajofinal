@@ -218,7 +218,7 @@ if st.sidebar.checkbox("Datos categoricos"):
             st.write(f'Variables categoricas: {list(data.select_dtypes(include=['object']).columns)}')
         except NameError:
             data = heartdisease.drop(columns=[col for col in columns_to_drop if col in heartdisease.columns])
-        encoded_data = apply_encoding(data, strategy2)
+        encoded_data = apply_encoding(heartdisease, strategy2)
         
         # Mostrar los datos codificados
         st.write(f"Vista previa de los datos codificados usando '{strategy2}':")
