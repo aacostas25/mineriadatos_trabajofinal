@@ -11,7 +11,7 @@ heartdisease = pd.read_csv('heartdisease.csv')
 
 # Título de la aplicación
 st.title("Exploración de datos: Heart Disease")
-st.image('titanic.jpg', caption="Titanic")
+st.image('heartdisease.jpg', caption="Problemas del corazón")
 # Descripción inicial
 
 st.write("""
