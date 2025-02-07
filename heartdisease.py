@@ -269,6 +269,7 @@ if st.sidebar.checkbox("Escalado de datos"):
         # Mostrar los datos escalados
         st.write(f"Vista previa de los datos escalados usando '{strategy}':")
         st.dataframe(scaled_data.head())
+        
 # Modelo de redes neuronales
 if st.sidebar.checkbox("Utilizar redes Neuronales"): 
     st.write("### Redes Neuronales")
@@ -284,18 +285,29 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
     try:
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
             zip_ref.extractall(extract_path)
-        st.success("Descompresión completada.")
+        #st.success("Descompresión completada.")
     except zipfile.BadZipFile:
         st.error("Error: El archivo ZIP está corrupto o no es un archivo ZIP válido.")
     except zipfile.LargeZipFile:
         st.error("Error: El archivo ZIP es demasiado grande y requiere compatibilidad con ZIP64.")
     except Exception as e:
         st.error(f"Error durante la descompresión: {str(e)}")
+
+    # Cargar el modelo
+    model = tf.keras.models.load_model(model_path)
+    #st.success("Modelo cargado correctamente.")
+    X = heartdisease.iloc[:, :-1]
+    y = heartdisease['Cath']
+    X_encoded = pd.get_dummies(X, drop_first=True,dtype= int)
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X_encoded)
+    label_encoder = LabelEncoder()
+    y_encoded = label_encoder.fit_transform(y)
+    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_encoded, test_size=0.2, random_state=42)
     
     st.write("### Indique si desea hacer una predicción de manera manual o usar datos por defecto")
     selected_column = st.selectbox("Selecciona un método para la predicción", ['Por defecto','Manual'])
     if selected_column=='Por defecto':
-        st.write("bien")
         # Buscar el archivo del modelo dentro de la carpeta extraída
         model_path = None
         for root, _, files in os.walk(extract_path):
@@ -305,17 +317,6 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
                     break
                     
         if model_path:
-            # Cargar el modelo
-            model = tf.keras.models.load_model(model_path)
-            st.success("Modelo cargado correctamente.")
-            X = heartdisease.iloc[:, :-1]
-            y = heartdisease['Cath']
-            X_encoded = pd.get_dummies(X, drop_first=True,dtype= int)
-            scaler = StandardScaler()
-            X_scaled = scaler.fit_transform(X_encoded)
-            label_encoder = LabelEncoder()
-            y_encoded = label_encoder.fit_transform(y)
-            X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_encoded, test_size=0.2, random_state=42)
 
             st.write("### Indique los datos por defecto que desea uasr para la predicción")
             data_model = st.selectbox("Selecciona un método para la predicción", ['Datos 1','Datos 2','Datos 3','Datos 4','Datos 5'])
@@ -349,7 +350,7 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
         
         
     if selected_column=='Manual':
-        st.write("bien2")   
+        
 
     
 
