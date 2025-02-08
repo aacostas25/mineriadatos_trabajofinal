@@ -41,7 +41,7 @@ st.sidebar.header("Exploración de datos")
 
 # Mostrar informacion en el dataset
 if st.sidebar.checkbox("Conoce un poco sobre la base de datos"):
-
+    
     st.title("Descripción de la base de datos **Z-Alizadeh Sani**")
     
     st.markdown("""
