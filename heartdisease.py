@@ -38,6 +38,56 @@ Y además, transformar los datos mediante la imputación de datos faltantes, la 
 # Sección para explorar el dataset
 st.sidebar.header("Exploración de datos")
 
+
+# Mostrar informacion en el dataset
+if st.sidebar.checkbox("Conoce un poco sobre la base de datos"):
+
+    st.title("Descripción de la base de datos **Z-Alizadeh Sani**")
+    
+    st.markdown("""
+    La base de datos **Z-Alizadeh Sani** contiene información médica de pacientes cardíacos y está estructurada en cuatro categorías principales:
+    """)
+    
+    # Demográficos
+    st.subheader("1. Demográficos")
+    st.markdown("""
+    - **Edad:** 30-86 años.
+    - **Peso:** 48-120 kg.
+    - **Altura:** 140-188 cm.
+    - **Sexo:** M (Masculino), F (Femenino).
+    - **Índice de Masa Corporal (BMI):** 18-41.
+    - **Historial médico:** Diabetes Mellitus (DM), Hipertensión (HTN), fumador actual/ex-fumador, historial familiar (FH), obesidad, insuficiencia renal crónica (CRF), enfermedad pulmonar, etc.
+    """)
+    
+    # Síntomas y Examen Físico
+    st.subheader("2. Síntomas y Examen Físico")
+    st.markdown("""
+    - **Presión Arterial (BP):** 90-190 mmHg.
+    - **Pulso (PR):** 50-110 ppm.
+    - **Síntomas cardíacos:** Edema, dolor torácico, disnea, soplos sistólicos y diastólicos.
+    - **Clase funcional:** Valores del 1 al 4.
+    """)
+    
+    # ECG
+    st.subheader("3. ECG")
+    st.markdown("""
+    - **Anomalías observadas:** Elevación del ST, inversión de T, hipertrofia ventricular izquierda (LVH), etc.
+    """)
+    
+    # Laboratorio y Ecocardiografía
+    st.subheader("4. Laboratorio y Ecocardiografía")
+    st.markdown("""
+    - **Pruebas de laboratorio:**
+      - Glucosa en ayunas (FBS): 62-400 mg/dl.
+      - Creatinina (Cr): 0.5-2.2 mg/dl.
+      - Lípidos (LDL, HDL, TG).
+      - Otros valores como hemoglobina, potasio, sodio, leucocitos, etc.
+    - **Ecocardiografía:**
+      - Fracción de eyección (EF-TTE): 15-60%.
+      - Anormalidades del movimiento regional de la pared (RWMA).
+    """)
+
+
 # Mostrar las primeras filas dinámicamente
 if st.sidebar.checkbox("Mostrar primeras filas"):
     n_rows = st.sidebar.slider("Número de filas a mostrar:", 1, 50, 5)
