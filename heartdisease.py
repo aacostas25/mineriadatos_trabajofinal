@@ -18,7 +18,15 @@ heartdisease = pd.read_csv('heartdisease.csv')
 st.title("Exploración de datos: Heart Disease")
 st.image('heartdisease.jpg', caption="Problemas del corazón")
 # Descripción inicial
+st.markdown("""
+Las enfermedades cardiovasculares son muy comunes y representan una de las principales causas de muerte. 
+Entre los principales tipos de estas enfermedades, el diagnóstico correcto y a tiempo de la enfermedad arterial coronaria (CAD) es de suma importancia. 
 
+Aunque la angiografía es el método más preciso para diagnosticar CAD, presenta muchos efectos secundarios y es costoso. 
+Estudios previos han utilizado varias características al recopilar datos de pacientes, aplicando diferentes algoritmos de minería de datos para lograr métodos con alta precisión, menos efectos secundarios y menores costos.
+
+En este contexto, se presenta un conjunto de datos llamado **Z-Alizadeh Sani**, que contiene información de 303 pacientes y 54 características, utilizando varios atributos efectivos para el análisis.
+""")
 st.write("""
 ### ¡Bienvenidos!
 Esta aplicación interactiva permite explorar el dataset de Heart Disease.
