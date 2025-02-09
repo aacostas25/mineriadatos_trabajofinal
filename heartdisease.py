@@ -13,7 +13,54 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
 from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder
 
+
+def load_encoder():
+    with open("onehot_encoder_5.pkl", "rb") as f:
+            encoder = pickle.load(f)
+    with open("numerical_columns_2.pkl", "rb") as f:
+            numerical_columns = pickle.load(f)
+    return encoder, numerical_columns
+
+def load_model_1():
+    """Cargar el modelo y sus pesos desde el archivo model_weights.pkl."""
+    # nombre de la red neuronal
+    filename = 'model_trained_classifier.pkl.gz'
+    with gzip.open(filename, 'rb') as f:
+        model1 = pickle.load(f)
+    return model1
+    
+def load_model_2():
+    filename = 'best_model.pkl.gz'
+    with gzip.open(filename, 'rb') as f:
+        model2 = pickle.load(f)
+    return model2
+
+model1=load_model_1()
+
+model2=load_model_2()
+
+column_names = [
+            "Age", "Weight", "Length", "Sex", "BMI", "DM", "HTN", "Current Smoker", "EX-Smoker", "FH", "Obesity", "CRF", "CVA",
+            "Airway disease", "Thyroid Disease", "CHF", "DLP", "BP", "PR", "Edema", "Weak Peripheral Pulse", "Lung rales",
+            "Systolic Murmur", "Diastolic Murmur", "Typical Chest Pain", "Dyspnea", "Function Class", "Atypical", "Nonanginal",
+            "Exertional CP", "LowTH Ang", "Q Wave", "St Elevation", "St Depression", "Tinversion", "LVH", "Poor R Progression",
+            "BBB", "FBS", "CR", "TG", "LDL", "HDL", "BUN", "ESR", "HB", "K", "Na", "WBC", "Lymph", "Neut", "PLT", "EF-TTE",
+            "Region RWMA"
+        ]
+
 heartdisease = pd.read_csv('heartdisease.csv')
+
+X = heartdisease.iloc[:, :-1]
+y = heartdisease['Cath']
+X_encoded = pd.get_dummies(X, drop_first=True,dtype= int)
+label_encoder = LabelEncoder()
+y_encoded = label_encoder.fit_transform(y)
+X_train, X_test, y_train, y_test = train_test_split(X_encoded, y_encoded, test_size=0.2, random_state=42)
+df_defecto=X_test.copy()
+
+
+
+
 
 # Título de la aplicación
 st.title("Exploración de datos: Heart Disease")
@@ -328,7 +375,22 @@ if st.sidebar.checkbox("Escalado de datos"):
         # Mostrar los datos escalados
         st.write(f"Vista previa de los datos escalados usando '{strategy}':")
         st.dataframe(scaled_data.head())
-        
+
+
+if st.sidebar.checkbox("Utilizar arboles de decisión"):
+    st.write("### Arboles de decisión")
+    st.write("""
+    El modelo utilizado consiste en un arbol con una profundidad de 3.
+    La base de datos fue codificada con One Hot Encoder y los datos no fueron escalados.
+    """)
+
+    prediction = model1.predict(df_first_row)
+    if prediction
+    st.write("Predicción del modelo:", prediction)
+    st.write("Clasificación real", y_test[0])
+
+
+
 # Modelo de redes neuronales
 if st.sidebar.checkbox("Utilizar redes Neuronales"): 
     st.write("### Redes Neuronales")
