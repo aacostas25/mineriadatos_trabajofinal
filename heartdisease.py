@@ -488,53 +488,53 @@ if st.sidebar.checkbox("Utilizar arboles de decisión"):
                 st.write("El modelo falló5")
 
     if selected_column=='Manual':             
-    # Crear DataFrame inicial con valores numéricos en 0 y categóricos con el primer valor de la lista
-    data = {col: [0.0] for col in column_names}  # Inicializar numéricos en 0
-    for col in categorical_columns:
-        data[col] = [categorical_columns[col][0]]  # Inicializar con el primer valor de la lista
-    
-    df = pd.DataFrame(data)
-    
-    # Convertir columnas categóricas a tipo "category" para que se muestren como dropdown en st.data_editor
-    for col in categorical_columns:
-        df[col] = df[col].astype("category")
-    
-    # Mostrar la tabla editable en Streamlit
-    st.write("### Introduce los datos para la predicción:")
-    edited_df = st.data_editor(df, key="editable_table")
-    
-    # Mostrar la tabla actualizada
-    st.write("#### Datos ingresados:")st.write(edited_df)
-    
-    # Botón para generar la predicción
-    if st.button("Realizar predicción"):
-        st.write("Procesando los datos para la predicción...")
-        # Mostrar los datos originales
-        st.write(" **Datos originales:**")
-        st.write(edited_df)
+        # Crear DataFrame inicial con valores numéricos en 0 y categóricos con el primer valor de la lista
+        data = {col: [0.0] for col in column_names}  # Inicializar numéricos en 0
+        for col in categorical_columns:
+            data[col] = [categorical_columns[col][0]]  # Inicializar con el primer valor de la lista
         
-        encoder, numerical_columns = load_encoder()
+        df = pd.DataFrame(data)
         
-        # Simulación de datos nuevos
-        new_data = edited_df
-        # Separar variables numéricas y categóricas
-        new_data_categorical = new_data[encoder.feature_names_in_]  # Mantiene solo las categóricas
-        new_data_numerical = new_data[numerical_columns]  # Mantiene solo las numéricas
+        # Convertir columnas categóricas a tipo "category" para que se muestren como dropdown en st.data_editor
+        for col in categorical_columns:
+            df[col] = df[col].astype("category")
         
-        # Codificar las variables categóricas
-        encoded_array = encoder.transform(new_data_categorical)
+        # Mostrar la tabla editable en Streamlit
+        st.write("### Introduce los datos para la predicción:")
+        edited_df = st.data_editor(df, key="editable_table")
         
-        # Convertir la salida a DataFrame con nombres de columnas codificadas
-        encoded_df = pd.DataFrame(encoded_array, columns=encoder.get_feature_names_out())
+        # Mostrar la tabla actualizada
+        st.write("#### Datos ingresados:")st.write(edited_df)
         
-        # Concatenar las variables numéricas con las categóricas codificadas
-        final_data = pd.concat([new_data_numerical, encoded_df], axis=1)
-
-        prediction=model1.predict(final_data)
-        if prediction==1:
-            st.write("Predicción del modelo:","Cath", prediction)
-        else:
-            st.write("Predicción del modelo:","Normal", prediction)
+        # Botón para generar la predicción
+        if st.button("Realizar predicción"):
+            st.write("Procesando los datos para la predicción...")
+            # Mostrar los datos originales
+            st.write(" **Datos originales:**")
+            st.write(edited_df)
+            
+            encoder, numerical_columns = load_encoder()
+            
+            # Simulación de datos nuevos
+            new_data = edited_df
+            # Separar variables numéricas y categóricas
+            new_data_categorical = new_data[encoder.feature_names_in_]  # Mantiene solo las categóricas
+            new_data_numerical = new_data[numerical_columns]  # Mantiene solo las numéricas
+            
+            # Codificar las variables categóricas
+            encoded_array = encoder.transform(new_data_categorical)
+            
+            # Convertir la salida a DataFrame con nombres de columnas codificadas
+            encoded_df = pd.DataFrame(encoded_array, columns=encoder.get_feature_names_out())
+            
+            # Concatenar las variables numéricas con las categóricas codificadas
+            final_data = pd.concat([new_data_numerical, encoded_df], axis=1)
+    
+            prediction=model1.predict(final_data)
+            if prediction==1:
+                st.write("Predicción del modelo:","Cath", prediction)
+            else:
+                st.write("Predicción del modelo:","Normal", prediction)
 
 
 
