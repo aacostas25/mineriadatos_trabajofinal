@@ -7,6 +7,9 @@ import seaborn as sns
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
+import gzip
+import pickle
+import io
 from sklearn.impute import KNNImputer
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
