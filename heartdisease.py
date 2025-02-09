@@ -560,7 +560,8 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
 
             if data_model=='Datos 1':
                 n=0
-                prediction = model2.predict(df.iloc[n,:].to_frame().T)
+                prediction = np.argmax(model2.predict(df.iloc[n,:].to_frame().T))
+                st.write(prediction)
                 if prediction==1 and y_test[n]==1:
                     st.write("Predicción del modelo:","Cath", prediction)
                     st.write("Clasificación real","Cath", y_test[n])
