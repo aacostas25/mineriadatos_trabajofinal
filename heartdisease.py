@@ -504,7 +504,8 @@ if st.sidebar.checkbox("Utilizar arboles de decisión"):
         edited_df = st.data_editor(df, key="editable_table")
         
         # Mostrar la tabla actualizada
-        st.write("#### Datos ingresados:")st.write(edited_df)
+        st.write("#### Datos ingresados:")
+        st.write(edited_df)
         
         # Botón para generar la predicción
         if st.button("Realizar predicción"):
