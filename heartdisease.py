@@ -403,12 +403,12 @@ if st.sidebar.checkbox("Utilizar arboles de decisión"):
     """)
     
     st.write("### Indique si desea hacer una predicción de manera manual o usar datos por defecto")
-    selected_column = st.selectbox("Selecciona un método para la predicción", ['Por defecto','Manual'])
+    selected_column = st.selectbox("Selecciona un método para la predicción", ['Por defecto','Manual'],key="madelo1_metodo_prediccion")
     
     if selected_column=='Por defecto':
         # Buscar el archivo del modelo dentro de la carpeta extraída
         st.write("### Indique los datos por defecto que desea uasr para la predicción")
-        data_model = st.selectbox("Selecciona un método para la predicción", ['Datos 1','Datos 2','Datos 3','Datos 4','Datos 5'])
+        data_model = st.selectbox("Selecciona un método para la predicción", ['Datos 1','Datos 2','Datos 3','Datos 4','Datos 5'],key="modelo1_eleccion_datos")
 
         if data_model=='Datos 1':
             n=0
@@ -552,11 +552,10 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
     """)
 
     st.write("### Indique si desea hacer una predicción de manera manual o usar datos por defecto")
-    selected_column = st.selectbox("Selecciona un método para la predicción", ['Por defecto','Manual'])
+    selected_column = st.selectbox("Selecciona un método para la predicción", ['Por defecto','Manual'],key="madelo2_metodo_prediccion")
     if selected_column=='Por defecto':
-       
             st.write("### Indique los datos por defecto que desea uasr para la predicción")
-            data_model = st.selectbox("Selecciona un método para la predicción", ['Datos 1','Datos 2','Datos 3','Datos 4','Datos 5'])
+            data_model = st.selectbox("Selecciona un método para la predicción", ['Datos 1','Datos 2','Datos 3','Datos 4','Datos 5'],key="modelo2_eleccion_datos")
 
             if data_model=='Datos 1':
                 n=0
