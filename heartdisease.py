@@ -42,6 +42,55 @@ model1=load_model_1()
 
 model2=load_model_2()
 
+def load_model_1():
+    filename = 'model_trained_classifier.pkl.gz'
+    with gzip.open(filename, 'rb') as f:
+        model1 = pickle.load(f)
+    return model1
+    
+def load_model_2():
+    filename = 'best_model.pkl.gz'
+    with gzip.open(filename, 'rb') as f:
+        model2 = pickle.load(f)
+    return model2
+
+model1=load_model_1()
+
+model2=load_model_2()
+
+def datos_pordefecto1(data_model):
+    n=int(data_model[-1])               
+    prediction1 = int(model1.predict(df.iloc[n,:].to_frame().T))
+    if prediction1==1 and int(y_test[n])==1:
+        st.write("Predicción del modelo:","Cath", prediction1)
+        st.write("Clasificación real:","Cath", y_test[n])
+        st.write("¡El modelo acertó!")                    
+    elif prediction1==0 and int(y_test[n])==0:
+        st.write("Predicción del modelo:","Normal", prediction1)
+        st.write("Clasificación real:","Normal", y_test[n])
+        st.write("¡El modelo acertó!")
+    else:
+        st.write("Predicción del modelo:", prediction1)
+        st.write("Clasificación real", y_test[n])
+        st.write("¡El modelo falló!")
+        
+def datos_pordefecto2(data_model):
+    n=int(data_model[-1])               
+    prediction2 = int(np.argmax(model2.predict(df.iloc[n,:].to_frame().T)))
+    if prediction2==1 and int(y_test[n])==1:
+        st.write("Predicción del modelo:","Cath", prediction2)
+        st.write("Clasificación real","Cath", y_test[n])
+        st.write("¡El modelo acertó!")                    
+    elif prediction2==0 and int(y_test[n])==0:
+        st.write("Predicción del modelo:","Normal", prediction2)
+        st.write("Clasificación real","Normal", y_test[n])
+        st.write("¡El modelo acertó!")
+    else:
+        st.write("Predicción del modelo:", prediction2)
+        st.write("Clasificación real", y_test[n])
+        st.write("¡El modelo falló!")
+
+
 column_names = [
             "Age", "Weight", "Length", "Sex", "BMI", "DM", "HTN", "Current Smoker", 
     "EX-Smoker", "FH", "Obesity", "CRF", "CVA",
@@ -75,9 +124,6 @@ X_train, X_test, y_train, y_test = train_test_split(X_encoded, y_encoded, test_s
 df_defecto=X_test.copy()
 
 df=X_test.copy()
-df_first_row = df.iloc[0,:].to_frame().T # Estos son los valores por defecto y no deben pasar por encoder
-
-
 
 # Título de la aplicación
 st.title("Exploración de datos: Heart Disease")
@@ -408,86 +454,10 @@ if st.sidebar.checkbox("Utilizar arboles de decisión"):
     if selected_column=='Por defecto':
         # Buscar el archivo del modelo dentro de la carpeta extraída
         st.write("### Indique los datos por defecto que desea uasr para la predicción")
-        data_model = st.selectbox("Selecciona un método para la predicción", ['Datos 1','Datos 2','Datos 3','Datos 4','Datos 5'],key="modelo1_eleccion_datos")
-
-        if data_model=='Datos 1':
-            n=0
-            prediction = model1.predict(df.iloc[n,:].to_frame().T)
-            if prediction==1 and y_test[n]==1:
-                st.write("Predicción del modelo:","Cath", prediction)
-                st.write("Clasificación real","Cath", y_test[n])
-                st.write("El modelo acertó")                    
-            if prediction==0 and y_test[n]==0:
-                st.write("Predicción del modelo:","Normal", prediction)
-                st.write("Clasificación real","Normal", y_test[n])
-                st.write("El modelo acertó")
-            else:
-                st.write("Predicción del modelo:", prediction)
-                st.write("Clasificación real", y_test[n])
-                st.write("El modelo falló1")
-
-        if data_model=='Datos 2':
-            n=1
-            prediction = model1.predict(df.iloc[n,:].to_frame().T)
-            if prediction==1 and y_test[n]==1:
-                st.write("Predicción del modelo:","Cath", prediction)
-                st.write("Clasificación real","Cath", y_test[n])
-                st.write("El modelo acertó")                    
-            if prediction==0 and y_test[n]==0:
-                st.write("Predicción del modelo:","Normal", prediction)
-                st.write("Clasificación real","Normal", y_test[n])
-                st.write("El modelo acertó")
-            else:
-                st.write("Predicción del modelo:", prediction)
-                st.write("Clasificación real", y_test[n])
-                st.write("El modelo falló2")
-        if data_model=='Datos 3':
-            n=2
-            prediction = model1.predict(df.iloc[n,:].to_frame().T)
-            if prediction==1 and y_test[n]==1:
-                st.write("Predicción del modelo:","Cath", prediction)
-                st.write("Clasificación real","Cath", y_test[n])
-                st.write("El modelo acertó")                    
-            if prediction==0 and y_test[n]==0:
-                st.write("Predicción del modelo:","Normal", prediction)
-                st.write("Clasificación real","Normal", y_test[n])
-                st.write("El modelo acertó")
-            else:
-                st.write("Predicción del modelo:", prediction)
-                st.write("Clasificación real", y_test[n])
-                st.write("El modelo falló3")
-        if data_model=='Datos 4':
-            n=3
-            prediction = model1.predict(df.iloc[n,:].to_frame().T)
-            if prediction==1 and y_test[n]==1:
-                st.write("Predicción del modelo:","Cath", prediction)
-                st.write("Clasificación real","Cath", y_test[n])
-                st.write("El modelo acertó")                    
-            if prediction==0 and y_test[n]==0:
-                st.write("Predicción del modelo:","Normal", prediction)
-                st.write("Clasificación real","Normal", y_test[n])
-                st.write("El modelo acertó")
-            else:
-                st.write("Predicción del modelo:", prediction)
-                st.write("Clasificación real", y_test[n])
-                st.write("El modelo falló4")
-        if data_model=='Datos 5':
-            n=4
-            prediction = model1.predict(df.iloc[n,:].to_frame().T)
-            if prediction==1 and y_test[n]==1:
-                st.write("Predicción del modelo:","Cath", prediction)
-                st.write("Clasificación real","Cath", y_test[n])
-                st.write("El modelo acertó")                    
-            if prediction==0 and y_test[n]==0:
-                st.write("Predicción del modelo:","Normal", prediction)
-                st.write("Clasificación real","Normal", y_test[n])
-                st.write("El modelo acertó")
-            else:
-                st.write("Predicción del modelo:", prediction)
-                st.write("Clasificación real", y_test[n])
-                st.write("El modelo falló5")
-
-    if selected_column=='Manual':             
+        data_model1 = st.selectbox("Selecciona un método para la predicción", ['Datos 1','Datos 2','Datos 3','Datos 4','Datos 5','Datos 6','Datos 7','Datos 8','Datos 9','Datos 10'],key="modelo1_eleccion_datos")
+        datos_pordefecto1(data_model1)
+        
+    elif selected_column=='Manual':             
         # Crear DataFrame inicial con valores numéricos en 0 y categóricos con el primer valor de la lista
         data = {col: [0.0] for col in column_names}  # Inicializar numéricos en 0
         for col in categorical_columns:
@@ -542,99 +512,20 @@ if st.sidebar.checkbox("Utilizar arboles de decisión"):
 
 # Modelo de redes neuronales
 if st.sidebar.checkbox("Utilizar redes Neuronales"): 
-    st.write("### Redes Neuronales")
-    st.write("### dwd Neuronales")
-    
-    
+    st.write("### Redes Neuronales")    
     st.write("""
     El modelo utilizado consiste en una red neuronal de una capa con 32 neuronas de entrada.
     La base de datos fue codificada con One Hot Encoder y estandarizada con StandardScaler.
     """)
-
     st.write("### Indique si desea hacer una predicción de manera manual o usar datos por defecto")
     selected_column = st.selectbox("Selecciona un método para la predicción", ['Por defecto','Manual'],key="madelo2_metodo_prediccion")
-    if selected_column=='Por defecto':
-            st.write("### Indique los datos por defecto que desea uasr para la predicción")
-            data_model = st.selectbox("Selecciona un método para la predicción", ['Datos 1','Datos 2','Datos 3','Datos 4','Datos 5'],key="modelo2_eleccion_datos")
-
-            if data_model=='Datos 1':
-                n=0
-                prediction = np.argmax(model2.predict(df.iloc[n,:].to_frame().T))
-                if prediction==1 and y_test[n]==1:
-                    st.write("Predicción del modelo:","Cath", prediction)
-                    st.write("Clasificación real","Cath", y_test[n])
-                    st.write("El modelo acertó")                    
-                if prediction==0 and y_test[n]==0:
-                    st.write("Predicción del modelo:","Normal", prediction)
-                    st.write("Clasificación real","Normal", y_test[n])
-                    st.write("El modelo acertó")
-                else:
-                    st.write("Predicción del modelo:", prediction)
-                    st.write("Clasificación real", y_test[n])
-                    st.write("El modelo falló")
     
-            if data_model=='Datos 2':
-                n=1
-                prediction = np.argmax(model2.predict(df.iloc[n,:].to_frame().T))
-                if prediction==1 and y_test[n]==1:
-                    st.write("Predicción del modelo:","Cath", prediction)
-                    st.write("Clasificación real","Cath", y_test[n])
-                    st.write("El modelo acertó")                    
-                if prediction==0 and y_test[n]==0:
-                    st.write("Predicción del modelo:","Normal", prediction)
-                    st.write("Clasificación real","Normal", y_test[n])
-                    st.write("El modelo acertó")
-                else:
-                    st.write("Predicción del modelo:", prediction)
-                    st.write("Clasificación real", y_test[n])
-                    st.write("El modelo falló")
-            if data_model=='Datos 3':
-                n=2
-                prediction = np.argmax(model2.predict(df.iloc[n,:].to_frame().T))
-                if prediction==1 and y_test[n]==1:
-                    st.write("Predicción del modelo:","Cath", prediction)
-                    st.write("Clasificación real","Cath", y_test[n])
-                    st.write("El modelo acertó")                    
-                if prediction==0 and y_test[n]==0:
-                    st.write("Predicción del modelo:","Normal", prediction)
-                    st.write("Clasificación real","Normal", y_test[n])
-                    st.write("El modelo acertó")
-                else:
-                    st.write("Predicción del modelo:", prediction)
-                    st.write("Clasificación real", y_test[n])
-                    st.write("El modelo falló")
-            if data_model=='Datos 4':
-                n=3
-                prediction = np.argmax(model2.predict(df.iloc[n,:].to_frame().T))
-                if prediction==1 and y_test[n]==1:
-                    st.write("Predicción del modelo:","Cath", prediction)
-                    st.write("Clasificación real","Cath", y_test[n])
-                    st.write("El modelo acertó")                    
-                if prediction==0 and y_test[n]==0:
-                    st.write("Predicción del modelo:","Normal", prediction)
-                    st.write("Clasificación real","Normal", y_test[n])
-                    st.write("El modelo acertó")
-                else:
-                    st.write("Predicción del modelo:", prediction)
-                    st.write("Clasificación real", y_test[n])
-                    st.write("El modelo falló")
-            if data_model=='Datos 5':
-                n=4
-                prediction = np.argmax(model2.predict(df.iloc[n,:].to_frame().T))
-                if prediction==1 and y_test[n]==1:
-                    st.write("Predicción del modelo:","Cath", prediction)
-                    st.write("Clasificación real","Cath", y_test[n])
-                    st.write("El modelo acertó")                    
-                if prediction==0 and y_test[n]==0:
-                    st.write("Predicción del modelo:","Normal", prediction)
-                    st.write("Clasificación real","Normal", y_test[n])
-                    st.write("El modelo acertó")
-                else:
-                    st.write("Predicción del modelo:", prediction)
-                    st.write("Clasificación real", y_test[n])
-                    st.write("El modelo falló")
+    if selected_column=='Por defecto':             
+        st.write("### Indique los datos por defecto que desea uasr para la predicción")
+        data_model2 = st.selectbox("Selecciona un método para la predicción", ['Datos 1','Datos 2','Datos 3','Datos 4','Datos 5','Datos 6','Datos 7','Datos 8','Datos 9','Datos 10'],key="modelo2_eleccion_datos")
+        datos_pordefecto2(data_model2) 
     
-    if selected_column=='Manual':
+    elif selected_column=='Manual':
         # Crear DataFrame inicial con valores numéricos en 0 y categóricos con el primer valor de la lista
         data = {col: [0.0] for col in column_names}  # Inicializar numéricos en 0
         for col in categorical_columns:
