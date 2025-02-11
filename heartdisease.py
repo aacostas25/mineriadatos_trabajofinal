@@ -500,16 +500,17 @@ if st.sidebar.checkbox("Utilizar arboles de decisión"):
         
                 else:
                     # Inicializar con 0.0 si no está en session_state
-                    if f"input_{col}" not in st.session_state:
-                        st.session_state[f"input_{col}"] = 0
-        
+                    if "inputs" not in st.session_state:
+                        st.session_state["inputs"] = {col: "0.0" for col in column_names}
+                    
                     input_value = cols[j].text_input(
                         f"{col}", 
-                        value=str(st.session_state.get(f"input_{col}", "0.0")),
+                        value=str(st.session_state["inputs"][col]),
                         help=column_types.get(col, ""),
                         key=f"input_{col}"
                     )
-
+                    
+                    st.session_state["inputs"][col] = input_value
         
                     try:
                         input_value = float(input_value)
@@ -603,14 +604,18 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
         
                 else:
                     # Inicializar con 0.0 si no está en session_state
-                    if f"input_{col}" not in st.session_state:
-                        st.session_state[f"input_{col}"] = 0
-        
+                    if "inputs" not in st.session_state:
+                        st.session_state["inputs"] = {col: "0.0" for col in column_names}
+                    
                     input_value = cols[j].text_input(
-                        f"{col}", value=str(st.session_state[f"input_{col}"]),
-                        help=column_types.get(col, "")
+                        f"{col}", 
+                        value=str(st.session_state["inputs"][col]),
+                        help=column_types.get(col, ""),
+                        key=f"input_{col}"
                     )
-        
+                    
+                    st.session_state["inputs"][col] = input_value
+                            
                     try:
                         input_value = float(input_value)
                     except ValueError:
