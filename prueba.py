@@ -746,6 +746,7 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
 
             if st.button("Realizar predicción",key="modelo2_predic_excel"):
                 st.write("Procesando los datos para la predicción...")
+                tf.keras.backend.clear_session()
                 # Mostrar los datos originales
                 encoder, numerical_columns = load_encoder()
                 # Simulación de datos nuevos
