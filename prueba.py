@@ -32,6 +32,7 @@ def load_model_1():
     
 def load_model_2():
     filename = 'best_model.pkl.gz'
+    tf.keras.backend.clear_session() 
     with gzip.open(filename, 'rb') as f:
         model2 = pickle.load(f)
     return model2
@@ -584,6 +585,7 @@ if st.sidebar.checkbox("Utilizar arboles de decisión"):
             selected_row = st.session_state.df_excel.iloc[row_number, :]
     
             if st.button("Realizar predicción", key="modelo1_predic_excel"):
+                tf.keras.backend.clear_session()
                 # Limpiar el estado de la predicción anterior
                 if 'prediction' in st.session_state:
                     del st.session_state.prediction
