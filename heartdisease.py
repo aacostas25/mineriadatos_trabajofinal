@@ -461,12 +461,12 @@ if st.sidebar.checkbox("Utilizar arboles de decisión"):
     st.write("### Arboles de decisión")
     st.write("""El modelo utilizado consiste en un arbol con una profundidad de 3.
     La base de datos fue codificada con One Hot Encoder y los datos no fueron escalados.""")
-    st.write("### Indique si desea hacer una predicción de manera manual o usar datos por defecto")
-    selected_column = st.selectbox("Selecciona un método para la predicción", ['Por defecto','Manual'],key="madelo1_metodo_prediccion")
+    st.write("### Indique si desea hacer una predicción de manera manual, usar datos por defecto o cargar una fila desde un archivo Excel")
+    selected_column = st.selectbox("Selecciona un método para la predicción", ['Por defecto','Manual','Cargar desde Excel'],key="madelo1_metodo_prediccion")
     
     if selected_column=='Por defecto':
         # Buscar el archivo del modelo dentro de la carpeta extraída
-        st.write("### Indique los datos por defecto que desea uasr para la predicción")
+        st.write("### Indique los datos por defecto que desea usar para la predicción")
         data_model1 = st.selectbox("Selecciona un método para la predicción", ['Datos 1','Datos 2','Datos 3','Datos 4','Datos 5','Datos 6','Datos 7','Datos 8','Datos 9','Datos 10'],key="modelo1_eleccion_datos")
         datos_pordefecto1(data_model1)
         
@@ -560,8 +560,52 @@ if st.sidebar.checkbox("Utilizar arboles de decisión"):
                 st.write("Predicción del modelo:","Cath", prediction)
             else:
                 st.write("Predicción del modelo:","Normal", prediction)
+                
+    elif selected_column == 'Cargar desde Excel':
+        st.write("### Cargar archivo Excel para la predicción")
+        uploaded_file = st.file_uploader("Cargar archivo Excel", type=["xlsx"])
+        
+        if uploaded_file is not None:
+            # Leer el archivo Excel
+            df_excel = pd.read_excel(uploaded_file)
+            
+            # Mostrar las primeras filas para ver los datos
+            st.write("### Datos cargados del archivo Excel:")
+            st.write(df_excel.head())
+            
+            # Pedir al usuario que seleccione la fila (podría ser por índice o número de fila)
+            row_number = st.number_input("Selecciona el número de fila para la predicción", min_value=0, max_value=len(df_excel)-1, value=0)
+            
+            # Seleccionar la fila correspondiente
+            selected_row = df_excel.iloc[row_number, :]
+            
+            # Mostrar la fila seleccionada
+            st.write("### Fila seleccionada para la predicción:")
+            st.write(selected_row)
 
+            # Preparar los datos para la predicción: aplicar One Hot Encoder y separación de variables numéricas
+            encoder, numerical_columns = load_encoder()
 
+            # Separar variables categóricas y numéricas
+            new_data_categorical = selected_row[encoder.feature_names_in_].to_frame().T  # Convertir a DataFrame
+            new_data_numerical = selected_row[numerical_columns].to_frame().T  # Convertir a DataFrame
+
+            # Codificar las variables categóricas
+            encoded_array = encoder.transform(new_data_categorical)
+
+            # Convertir la salida a DataFrame con nombres de columnas codificadas
+            encoded_df = pd.DataFrame(encoded_array, columns=encoder.get_feature_names_out())
+
+            # Concatenar las variables numéricas con las categóricas codificadas
+            final_data = pd.concat([new_data_numerical, encoded_df], axis=1)
+
+            # Realizar la predicción
+            prediction = model1.predict(final_data)
+
+            if prediction == 1:
+                st.write("Predicción del modelo:","Cath", prediction)
+            else:
+                st.write("Predicción del modelo:","Normal", prediction)
 
 # Modelo de redes neuronales
 if st.sidebar.checkbox("Utilizar redes Neuronales"): 
@@ -667,3 +711,119 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
                 st.write("Predicción del modelo:","Cath", prediction)
             else:
                 st.write("Predicción del modelo:","Normal", prediction)
+
+additional_params = {
+    'Depth': 1,
+    'Epochs': 11,
+    'Batch Size': 58,
+    'Accuracy': 0.704918,
+    'Loss': 0.6126
+}
+
+# Colocar el checkbox en la barra lateral
+if st.sidebar.checkbox("Mostrar hiperparámetros del modelo"):
+    st.write("#### Hiperparámetros del modelo")
+    
+    # Mostrar los hiperparámetros del modelo 1 (modelo de clasificación - árbol de decisión)
+    if hasattr(model1, 'get_params'):
+        st.write("##### Hiperparámetros del modelo de clasificación (sklearn)")
+        
+        model1_params = model1.get_params()  # Extraer los hiperparámetros del modelo
+        
+        # Convertir los hiperparámetros a un formato adecuado para una tabla
+        model1_params_table = [(key, value) for key, value in model1_params.items()] 
+        
+        # Limpiar los valores None o <NA> y reemplazarlos con un guion o valor vacío
+        cleaned_model1_params = [
+            (key, value if value is not None and value != "<NA>" else "-") 
+            for key, value in model1_params_table
+        ]
+        
+        # Mostrar los parámetros del modelo 1 como una tabla
+        model1_params_df = pd.DataFrame(cleaned_model1_params, columns=["Hiperparámetro", "Valor"])
+        
+        # Establecer el ancho de las columnas para que se ajusten adecuadamente
+        model1_params_df.style.set_properties(subset=["Hiperparámetro", "Valor"], width="300px")
+        
+        # Mostrar la tabla con estilo
+        st.dataframe(model1_params_df, use_container_width=True)
+        
+        # Agregar tabla con el Accuracy del modelo de árbol de decisión (con 6 decimales)
+        st.write("##### Accuracy del modelo de clasificación (Árbol de Decisión)")
+        accuracy_params = {
+            "Accuracy": f"{0.836065:.6f}"  # Formatear el Accuracy con 6 decimales
+        }
+        accuracy_df = pd.DataFrame(list(accuracy_params.items()), columns=["Métrica", "Valor"])
+        st.dataframe(accuracy_df, use_container_width=True)
+    
+    # Mostrar los hiperparámetros del modelo 2 (modelo de red neuronal)
+    if hasattr(model2, 'get_config'):
+        st.write("##### Hiperparámetros del modelo de red neuronal (TensorFlow/Keras)")
+        
+        # Obtener los hiperparámetros de la red neuronal
+        model2_params = []
+        for layer in model2.layers:
+            layer_info = {
+                "Capa": layer._class.name_,  # Nombre de la capa (ej. Dense, Conv2D)
+                "Hiperparámetros": layer.get_config()  # Obtiene la configuración de la capa
+            }
+            model2_params.append(layer_info)
+        
+        # Crear un diccionario para almacenar los hiperparámetros de cada capa
+        layers_info = {}
+        
+        for i, layer in enumerate(model2_params):
+            layer_name = f"Capa {i+1} ({layer['Capa']})"
+            layer_config = layer["Hiperparámetros"]
+            
+            for param, value in layer_config.items():
+                if param not in layers_info:
+                    layers_info[param] = []
+                layers_info[param].append(value)
+
+        # Convertir el diccionario en un DataFrame con los hiperparámetros como filas
+        model2_params_df = pd.DataFrame(layers_info)
+        
+        # Transponer la tabla para que las capas estén como columnas y los hiperparámetros como filas
+        model2_params_df = model2_params_df.transpose()
+        
+        # Renombrar las columnas para reflejar el número de capa
+        model2_params_df.columns = [f"Capa {i+1}" for i in range(len(model2_params))]
+        
+        # Establecer el ancho de las columnas para que se ajusten adecuadamente
+        model2_params_df.style.set_properties(subset=model2_params_df.columns, width="300px")
+        
+        # Mostrar la tabla con estilo
+        st.dataframe(model2_params_df, use_container_width=True)
+        
+        # Obtener el learning rate
+        if hasattr(model2, 'optimizer'):
+            optimizer = model2.optimizer
+            if hasattr(optimizer, 'lr'):  # Para versiones más antiguas de Keras
+                learning_rate = optimizer.lr.numpy()
+            elif hasattr(optimizer, 'learning_rate'):  # Para versiones más recientes de TensorFlow
+                learning_rate = optimizer.learning_rate.numpy()
+                        
+        # Agregar el learning rate a los parámetros generales
+        additional_params['Learning Rate'] = learning_rate
+        
+        # Crear un DataFrame para los parámetros generales
+        additional_params_df = pd.DataFrame(list(additional_params.items()), columns=["Hiperparámetro", "Valor"])
+        
+        # Ajustar los decimales de los valores para que se muestren con hasta 6 decimales
+        def format_value(value):
+            if isinstance(value, (float, int)):
+                # Si el valor tiene decimales, mostrarlo con 6 decimales, de lo contrario, mostrarlo como entero
+                if value.is_integer():
+                    return f"{int(value)}"  # Mostrar como entero si no tiene decimales
+                return f"{value:.6f}"  # Mostrar con 6 decimales
+            return value  # Para valores no numéricos, devolver tal cual
+        
+        additional_params_df["Valor"] = additional_params_df["Valor"].apply(format_value)
+        
+        # Mostrar la tabla de los parámetros generales
+        st.write("##### Parámetros Generales del Modelo")
+        st.dataframe(additional_params_df, use_container_width=True)
+    
+    else:
+        st.write("El modelo no tiene el método get_config() disponible.")
