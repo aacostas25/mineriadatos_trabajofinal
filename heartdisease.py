@@ -608,7 +608,7 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
                         index=categorical_columns[col].index(st.session_state[widget_key]) 
                         if st.session_state[widget_key] in categorical_columns[col] else 0, 
                         help=column_types.get(col, ""),
-                        key=widget_key  # Evita duplicados en selectbox
+                        key=f"input_{col}_modelo02"  # Evita duplicados en selectbox
                     )
                 
                 else:
