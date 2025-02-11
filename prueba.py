@@ -570,19 +570,24 @@ if st.sidebar.checkbox("Utilizar arboles de decisión"):
         
         if uploaded_file is not None:
             # Leer el archivo Excel
-            df_excel = pd.read_excel(uploaded_file)
+            if 'df_excel' not in st.session_state:
+                st.session_state.df_excel = pd.read_excel(uploaded_file)
             
             # Mostrar las primeras filas para ver los datos
             st.write("### Datos cargados del archivo Excel:")
-            st.write(df_excel.head())
+            st.write(st.session_state.df_excel.head())
             
             # Pedir al usuario que seleccione la fila (podría ser por índice o número de fila)
-            row_number = st.number_input("Selecciona el número de fila para la predicción", min_value=0, max_value=len(df_excel)-1, value=0)
+            row_number = st.number_input("Selecciona el número de fila para la predicción", min_value=0, max_value=len(st.session_state.df_excel)-1, value=0)
             
             # Seleccionar la fila correspondiente
-            selected_row = df_excel.iloc[row_number, :]
+            selected_row = st.session_state.df_excel.iloc[row_number, :]
     
             if st.button("Realizar predicción", key="modelo1_predic_excel"):
+                # Limpiar el estado de la predicción anterior
+                if 'prediction' in st.session_state:
+                    del st.session_state.prediction
+                
                 st.write("Procesando los datos para la predicción...")
                 
                 # Mostrar la fila seleccionada
@@ -606,13 +611,14 @@ if st.sidebar.checkbox("Utilizar arboles de decisión"):
                 final_data = pd.concat([new_data_numerical, encoded_df], axis=1)
     
                 # Realizar la predicción
-                prediction = int(model1.predict(final_data))
+                predictions = model1.predict(final_data)  # Esto devuelve un array
+                st.session_state.prediction = int(predictions[0])  # Guardar la predicción en el estado
                 
-                if prediction == 1:
-                    st.write("De acuerdo con el modelo la persona sufre de la enfermedad arterial coronaria (Cath):", prediction)       
+                # Mostrar el resultado de la predicción
+                if st.session_state.prediction == 1:
+                    st.write("De acuerdo con el modelo la persona sufre de la enfermedad arterial coronaria (Cath):", st.session_state.prediction)       
                 else:
-                    st.write("De acuerdo con el modelo la persona no sufre de la enfermedad arterial coronaria (Normal):", prediction)
-
+                    st.write("De acuerdo con el modelo la persona no sufre de la enfermedad arterial coronaria (Normal):", st.session_state.prediction)
 
 # Modelo de redes neuronales
 if st.sidebar.checkbox("Utilizar redes Neuronales"): 
