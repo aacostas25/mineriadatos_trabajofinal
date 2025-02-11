@@ -478,59 +478,61 @@ if st.sidebar.checkbox("Utilizar arboles de decisión"):
         input_data = {}
         num_columns = 3  # Definir el número de columnas para organizar los campos
         
+        # Inicializar session_state si no existe
+        if "inputs" not in st.session_state:
+            st.session_state["inputs"] = {col: "0.0" for col in column_names}
+        
         for i in range(0, len(column_names), num_columns):
             cols = st.columns(num_columns)
+            
             for j, col in enumerate(column_names[i:i+num_columns]):
+                widget_key = f"input_{col}"  # Generar clave única para cada input
+                
                 if col in categorical_columns:
-                    # Inicializar con el primer valor de la lista si no está en session_state
-                    if f"input_{col}" not in st.session_state:
-                        st.session_state[f"input_{col}"] = categorical_columns[col][0]
-                
-                    # PASO 2: Convertir el valor en session_state a string si es necesario
-                    input_value = st.session_state[f"input_{col}"]
-                    if isinstance(input_value, float):  # Evitar errores con índices de selectbox
-                        input_value = str(int(input_value))  # Convertir a string si es necesario
-                
+                    # Asegurar que la clave existe en session_state
+                    if widget_key not in st.session_state:
+                        st.session_state[widget_key] = categorical_columns[col][0]
+        
+                    # Seleccionar el índice correcto
                     input_value = cols[j].selectbox(
                         f"{col}", 
                         options=categorical_columns[col], 
-                        index=categorical_columns[col].index(input_value) if input_value in categorical_columns[col] else 0, 
-                        help=column_types.get(col, "")
+                        index=categorical_columns[col].index(st.session_state[widget_key]) 
+                        if st.session_state[widget_key] in categorical_columns[col] else 0, 
+                        help=column_types.get(col, ""),
+                        key=widget_key  # Evita duplicados en selectbox
                     )
-        
+                
                 else:
-                    # Inicializar con 0.0 si no está en session_state
-                    if "inputs" not in st.session_state:
-                        st.session_state["inputs"] = {col: "0.0" for col in column_names}
-                    
+                    # Tomar el valor desde session_state["inputs"]
                     input_value = cols[j].text_input(
                         f"{col}", 
-                        value=str(st.session_state["inputs"][col]),
+                        value=str(st.session_state["inputs"][col]),  
                         help=column_types.get(col, ""),
-                        key=f"input_{col}"
+                        key=widget_key  # Se asegura de que cada campo tenga un key único
                     )
-                    
-                    st.session_state["inputs"][col] = input_value
         
+                    # Convertir a float
                     try:
                         input_value = float(input_value)
                     except ValueError:
                         input_value = 0.0
         
-                # Guardar el valor en session_state y en input_data
-                st.session_state[f"input_{col}"] = input_value
+                    # Guardar en session_state["inputs"]
+                    st.session_state["inputs"][col] = str(input_value)
+        
+                # Guardar en input_data
                 input_data[col] = input_value
         
         st.write("### Datos ingresados")
-        
-        # Procesar los datos en un formato adecuado
+        # Convertir datos para evitar errores
         processed_data = [
             str(value) if col in categorical_columns else float(value) 
             for col, value in input_data.items()
         ]
         
-        # Convertir la lista en un numpy array
-        input_array = np.array(processed_data, dtype=object)  # dtype=object mantiene tipos mixtos       
+        # Convertir a numpy array
+        input_array = np.array(processed_data, dtype=object)
 
         if st.button("Realizar predicción"):
             st.write("Procesando los datos para la predicción...")
@@ -584,57 +586,61 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
         input_data = {}
         num_columns = 3  # Definir el número de columnas para organizar los campos
         
+        # Inicializar session_state si no existe
+        if "inputs" not in st.session_state:
+            st.session_state["inputs"] = {col: "0.0" for col in column_names}
+        
         for i in range(0, len(column_names), num_columns):
             cols = st.columns(num_columns)
+            
             for j, col in enumerate(column_names[i:i+num_columns]):
+                widget_key = f"input_{col}"  # Generar clave única para cada input
+                
                 if col in categorical_columns:
-                    # Inicializar con el primer valor de la lista si no está en session_state
-                    if f"input_{col}" not in st.session_state:
-                        st.session_state[f"input_{col}"] = categorical_columns[col][0]
-                    # PASO 2: Convertir el valor en session_state a string si es necesario
-                    input_value = st.session_state[f"input_{col}"]
-                    if isinstance(input_value, float):  # Evitar errores con índices de selectbox
-                        input_value = str(int(input_value))  # Convertir a string si es necesario
+                    # Asegurar que la clave existe en session_state
+                    if widget_key not in st.session_state:
+                        st.session_state[widget_key] = categorical_columns[col][0]
+        
+                    # Seleccionar el índice correcto
                     input_value = cols[j].selectbox(
                         f"{col}", 
                         options=categorical_columns[col], 
-                        index=categorical_columns[col].index(input_value) if input_value in categorical_columns[col] else 0, 
-                        help=column_types.get(col, "")
+                        index=categorical_columns[col].index(st.session_state[widget_key]) 
+                        if st.session_state[widget_key] in categorical_columns[col] else 0, 
+                        help=column_types.get(col, ""),
+                        key=widget_key  # Evita duplicados en selectbox
                     )
-        
+                
                 else:
-                    # Inicializar con 0.0 si no está en session_state
-                    if "inputs" not in st.session_state:
-                        st.session_state["inputs"] = {col: "0.0" for col in column_names}
-                    
+                    # Tomar el valor desde session_state["inputs"]
                     input_value = cols[j].text_input(
                         f"{col}", 
-                        value=str(st.session_state["inputs"][col]),
+                        value=str(st.session_state["inputs"][col]),  
                         help=column_types.get(col, ""),
-                        key=f"input_{col}"
+                        key=widget_key  # Se asegura de que cada campo tenga un key único
                     )
-                    
-                    st.session_state["inputs"][col] = input_value
-                            
+        
+                    # Convertir a float
                     try:
                         input_value = float(input_value)
                     except ValueError:
                         input_value = 0.0
         
-                # Guardar el valor en session_state y en input_data
-                st.session_state[f"input_{col}"] = input_value
+                    # Guardar en session_state["inputs"]
+                    st.session_state["inputs"][col] = str(input_value)
+        
+                # Guardar en input_data
                 input_data[col] = input_value
         
         st.write("### Datos ingresados")
-        
-        # Procesar los datos en un formato adecuado
+        # Convertir datos para evitar errores
         processed_data = [
             str(value) if col in categorical_columns else float(value) 
             for col, value in input_data.items()
         ]
         
-        # Convertir la lista en un numpy array
-        input_array = np.array(processed_data, dtype=object)  # dtype=object mantiene tipos mixtos       
+        # Convertir a numpy array
+        input_array = np.array(processed_data, dtype=object)
 
         if st.button("Realizar predicción"):
             st.write("Procesando los datos para la predicción...")
