@@ -509,7 +509,7 @@ if st.sidebar.checkbox("Utilizar arboles de decisión"):
                         f"{col}", 
                         value=str(st.session_state["inputs"][col]),  
                         help=column_types.get(col, ""),
-                        key=widget_key  # Se asegura de que cada campo tenga un key único
+                        key=f"input_{col}_modelo1"  # Se asegura de que cada campo tenga un key único
                     )
         
                     # Convertir a float
@@ -617,7 +617,7 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
                         f"{col}", 
                         value=str(st.session_state["inputs"][col]),  
                         help=column_types.get(col, ""),
-                        key=widget_key  # Se asegura de que cada campo tenga un key único
+                        key=f"input_{col}_modelo2"  # Se asegura de que cada campo tenga un key único
                     )
         
                     # Convertir a float
