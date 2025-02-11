@@ -60,6 +60,7 @@ def datos_pordefecto1(data_model):
     n=int(data_model[-1])            
     m=data_model[-1]
     prediction1 = int(model1.predict(df.iloc[n,:].to_frame().T))
+    st.write(df.iloc[n,:].to_frame().T)
     if prediction1==1 and int(y_test[n])==1:
         st.write("De acuerdo con el modelo la persona",m,"sufre de la enfermedad arterial coronaria (Cath):", prediction1)
         st.write("Clasificación real de la persona",m,":", y_test[n])
@@ -78,6 +79,7 @@ def datos_pordefecto2(data_model):
     n=int(data_model[-1])          
     m=data_model[-1]
     prediction2 = int(np.argmax(model2.predict(df.iloc[n,:].to_frame().T)))
+    st.write(df.iloc[n,:].to_frame().T)
     # st.write("Predicción: ",model2.predict(final_data))
     if prediction2==1 and int(y_test[n])==1:
         st.write("De acuerdo con el modelo la persona",m,"sufre de la enfermedad arterial coronaria (Normal):", prediction2)
