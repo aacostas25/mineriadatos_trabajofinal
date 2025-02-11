@@ -60,33 +60,36 @@ def datos_pordefecto1(data_model):
     n=int(data_model[-1])               
     prediction1 = int(model1.predict(df.iloc[n,:].to_frame().T))
     if prediction1==1 and int(y_test[n])==1:
-        st.write("Predicción del modelo:","Cath", prediction1)
-        st.write("Clasificación real:","Cath", y_test[n])
-        st.write("¡El modelo acertó!")                    
+        st.write("De acuerdo con el modelo la persona sufre de la enfermedad arterial coronaria (Cath):", prediction1)
+        st.write("Clasificación real de la persona:", y_test[n])
+        st.write("¡El modelo acertó! :worried:")                    
     elif prediction1==0 and int(y_test[n])==0:
-        st.write("Predicción del modelo:","Normal", prediction1)
-        st.write("Clasificación real:","Normal", y_test[n])
-        st.write("¡El modelo acertó!")
+        st.write("De acuerdo con el modelo la persona no sufre de la enfermedad arterial coronaria (Normal):", prediction1)
+        st.write("Clasificación real de la persona:", y_test[n])
+        st.write("¡El modelo acertó! :partying_face:")
     else:
         st.write("Predicción del modelo:", prediction1)
-        st.write("Clasificación real", y_test[n])
-        st.write("¡El modelo falló!")
+        st.write("Clasificación real:", y_test[n])
+        st.write("¡El modelo falló...! ")
+        st.write("❌ ERROR: Modelo sobreexplotado 💀. Reduciendo tareas... 🔄")
         
 def datos_pordefecto2(data_model):
     n=int(data_model[-1])               
     prediction2 = int(np.argmax(model2.predict(df.iloc[n,:].to_frame().T)))
     if prediction2==1 and int(y_test[n])==1:
-        st.write("Predicción del modelo:","Cath", prediction2)
-        st.write("Clasificación real","Cath", y_test[n])
-        st.write("¡El modelo acertó!")                    
+        st.write("De acuerdo con el modelo la persona sufre de la enfermedad arterial coronaria (Cath):", prediction2)
+        st.write("Clasificación real de la persona:", y_test[n])
+        st.write("¡El modelo acertó! :worried:")                    
     elif prediction2==0 and int(y_test[n])==0:
-        st.write("Predicción del modelo:","Normal", prediction2)
-        st.write("Clasificación real","Normal", y_test[n])
-        st.write("¡El modelo acertó!")
+        st.write("De acuerdo con el modelo la persona no sufre de la enfermedad arterial coronaria (Cath):", prediction2)
+        st.write("Clasificación real de la persona:", y_test[n])
+        st.write("¡El modelo acertó! :partying_face:")
     else:
         st.write("Predicción del modelo:", prediction2)
-        st.write("Clasificación real", y_test[n])
-        st.write("¡El modelo falló!")
+        st.write("Clasificación real:", y_test[n])
+        st.write("¡El modelo falló...! ")
+        st.write("❌ ERROR: Modelo sobreajustado 💀. Reestableciendo las tres leyes de la robótica... 🔄")
+        st.write("❌ ERROR FATAL: Sobrecalentamiento neuronal 🔥. Reconstruyendo capas... 🔄")
 
 
 column_names = [
@@ -461,18 +464,18 @@ if st.sidebar.checkbox("Utilizar arboles de decisión"):
     st.write("### Arboles de decisión")
     st.write("""El modelo utilizado consiste en un arbol con una profundidad de 3.
     La base de datos fue codificada con One Hot Encoder y los datos no fueron escalados.""")
-    st.write("### Indique si desea hacer una predicción de manera manual, usar datos por defecto o cargar una fila desde un archivo Excel")
+    st.write("#### Indique si desea hacer una predicción de manera manual, usar datos por defecto o cargar una fila desde un archivo Excel")
     selected_column = st.selectbox("Selecciona un método para la predicción", ['Por defecto','Manual','Cargar desde Excel'],key="madelo1_metodo_prediccion")
-    
+        
     if selected_column=='Por defecto':
         # Buscar el archivo del modelo dentro de la carpeta extraída
-        st.write("### Indique los datos por defecto que desea usar para la predicción")
+        st.write("##### Indique los datos por defecto que desea usar para la predicción")
         data_model1 = st.selectbox("Selecciona un método para la predicción", ['Datos 1','Datos 2','Datos 3','Datos 4','Datos 5','Datos 6','Datos 7','Datos 8','Datos 9','Datos 10'],key="modelo1_eleccion_datos")
         datos_pordefecto1(data_model1)
         
     elif selected_column=='Manual':             
          # Título de la aplicación
-        st.write("### Formulario de ingreso de datos para predicción")
+        st.write("##### Formulario de ingreso de datos para predicción")
         
         # Crear el formulario
         input_data = {}
@@ -524,7 +527,6 @@ if st.sidebar.checkbox("Utilizar arboles de decisión"):
                 # Guardar en input_data
                 input_data[col] = input_value
         
-        st.write("### Datos ingresados")
         # Convertir datos para evitar errores
         processed_data = [
             str(value) if col in categorical_columns else float(value) 
@@ -537,8 +539,6 @@ if st.sidebar.checkbox("Utilizar arboles de decisión"):
         if st.button("Realizar predicción",key="modelo1_predic"):
             st.write("Procesando los datos para la predicción...")
             # Mostrar los datos originales
-            st.write(" **Datos originales:**")
-            st.write(input_array)
             encoder, numerical_columns = load_encoder()
             # Simulación de datos nuevos
             new_data = input_array   
@@ -555,11 +555,11 @@ if st.sidebar.checkbox("Utilizar arboles de decisión"):
             encoded_df = pd.DataFrame(encoded_array, columns=encoder.get_feature_names_out())            
             # Concatenar las variables numéricas con las categóricas codificadas
             final_data = pd.concat([new_data_numerical, encoded_df], axis=1)    
-            prediction=model1.predict(final_data)
+            prediction=int(model1.predict(final_data))
             if prediction==1:
-                st.write("Predicción del modelo:","Cath", prediction)
+                st.write("De acuerdo con el modelo la persona sufre de la enfermedad arterial coronaria (Cath):", prediction)       
             else:
-                st.write("Predicción del modelo:","Normal", prediction)
+                st.write("De acuerdo con el modelo la persona no sufre de la enfermedad arterial coronaria (Normal):", prediction)
                 
     elif selected_column == 'Cargar desde Excel':
         st.write("### Cargar archivo Excel para la predicción")
@@ -605,10 +605,10 @@ if st.sidebar.checkbox("Utilizar arboles de decisión"):
             # Realizar la predicción
             prediction = model1.predict(final_data)
             
-            if prediction == 1:
-                st.write("Predicción del modelo:","Cath", prediction)
+            if prediction==1:
+                st.write("De acuerdo con el modelo la persona sufre de la enfermedad arterial coronaria (Cath):", prediction)       
             else:
-                st.write("Predicción del modelo:","Normal", prediction)
+                st.write("De acuerdo con el modelo la persona no sufre de la enfermedad arterial coronaria (Normal):", prediction)
 
 
 # Modelo de redes neuronales
@@ -714,9 +714,9 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
             prediction=np.argmax(model2.predict(final_data))
             st.write("Predicción: ",model2.predict(final_data))
             if prediction==1:
-                st.write("Predicción del modelo:","Cath", prediction)
+                st.write("De acuerdo con el modelo la persona sufre de la enfermedad arterial coronaria (Cath):", prediction)       
             else:
-                st.write("Predicción del modelo:","Normal", prediction)
+                st.write("De acuerdo con el modelo la persona no sufre de la enfermedad arterial coronaria (Normal):", prediction)
 
     elif selected_column == 'Cargar desde Excel':
         st.write("### Cargar archivo Excel para la predicción")
@@ -759,10 +759,10 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
                 prediction=np.argmax(model2.predict(final_data))
                 st.write("Predicción: ",model2.predict(final_data))
                 if prediction==1:
-                    st.write("Predicción del modelo:","Cath", prediction)
+                    st.write("De acuerdo con el modelo la persona sufre de la enfermedad arterial coronaria (Cath):", prediction)       
                 else:
-                    st.write("Predicción del modelo:","Normal", prediction)
-    
+                    st.write("De acuerdo con el modelo la persona no sufre de la enfermedad arterial coronaria (Normal):", prediction)
+
 
 additional_params = {
     'Depth': 1,
