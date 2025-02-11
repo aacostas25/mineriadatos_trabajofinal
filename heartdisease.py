@@ -76,6 +76,7 @@ def datos_pordefecto1(data_model):
 def datos_pordefecto2(data_model):
     n=int(data_model[-1])               
     prediction2 = int(np.argmax(model2.predict(df.iloc[n,:].to_frame().T)))
+    # st.write("Predicción: ",model2.predict(final_data))
     if prediction2==1 and int(y_test[n])==1:
         st.write("De acuerdo con el modelo la persona sufre de la enfermedad arterial coronaria (Cath):", prediction2)
         st.write("Clasificación real de la persona:", y_test[n])
@@ -90,7 +91,7 @@ def datos_pordefecto2(data_model):
         st.write("¡El modelo falló...! ")
         st.write("❌ ERROR: Modelo sobreajustado 💀. Reestableciendo las tres leyes de la robótica... 🔄")
         st.write("❌ ERROR FATAL: Sobrecalentamiento neuronal 🔥. Reconstruyendo capas... 🔄")
-
+    
 
 column_names = [
             "Age", "Weight", "Length", "Sex", "BMI", "DM", "HTN", "Current Smoker", 
@@ -681,7 +682,6 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
                 # Guardar en input_data
                 input_data[col] = input_value
         
-        st.write("### Datos ingresados")
         # Convertir datos para evitar errores
         processed_data = [
             str(value) if col in categorical_columns else float(value) 
@@ -694,8 +694,6 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
         if st.button("Realizar predicción",key="modelo2_predic"):
             st.write("Procesando los datos para la predicción...")
             # Mostrar los datos originales
-            st.write(" **Datos originales:**")
-            st.write(input_array)
             encoder, numerical_columns = load_encoder()
             # Simulación de datos nuevos
             new_data = input_array   
