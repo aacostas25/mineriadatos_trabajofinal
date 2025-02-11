@@ -560,8 +560,8 @@ if st.sidebar.checkbox("Utilizar arboles de decisión"):
             encoded_df = pd.DataFrame(encoded_array, columns=encoder.get_feature_names_out())            
             # Concatenar las variables numéricas con las categóricas codificadas
             final_data = pd.concat([new_data_numerical, encoded_df], axis=1)
-            st.write("Datos sin codificar",new_data)
-            st.write("Datos codificados",final_data)
+            st.write("Datos sin codificar: ",new_data)
+            st.write("Datos codificados: ",final_data)
             prediction=int(model1.predict(final_data))
             if prediction==1:
                 st.write("De acuerdo con el modelo la persona sufre de la enfermedad arterial coronaria (Cath):", prediction)       
@@ -611,7 +611,7 @@ if st.sidebar.checkbox("Utilizar arboles de decisión"):
     
                 # Realizar la predicción
                 prediction = int(model1.predict(final_data))
-                st.write("Datos codificados",final_data)
+                st.write("Datos codificados: ",final_data)
                 
                 if prediction==1:
                     st.write("De acuerdo con el modelo la persona sufre de la enfermedad arterial coronaria (Cath):", prediction)       
@@ -716,8 +716,8 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
             encoded_df = pd.DataFrame(encoded_array, columns=encoder.get_feature_names_out())            
             # Concatenar las variables numéricas con las categóricas codificadas
             final_data = pd.concat([new_data_numerical, encoded_df], axis=1)    
-            st.write("Datos sin codificar",new_data)
-            st.write("Datos codificados",final_data)
+            st.write("Datos sin codificar: ",new_data)
+            st.write("Datos codificados: ",final_data)
             prediction=np.argmax(model2.predict(final_data))
             st.write("Predicción: ",model2.predict(final_data))
             if prediction==1:
@@ -762,7 +762,7 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
                 # Concatenar las variables numéricas con las categóricas codificadas
                 final_data = pd.concat([new_data_numerical, encoded_df], axis=1) 
                 
-                st.write("Datos codificados",final_data)
+                st.write("Datos codificados: ",final_data)
                 prediction=np.argmax(model2.predict(final_data))
                 st.write("Predicción: ",model2.predict(final_data))
                 if prediction==1:
