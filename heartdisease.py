@@ -810,7 +810,7 @@ if st.sidebar.checkbox("Mostrar hiperparámetros del modelo"):
     
     # Mostrar los hiperparámetros del modelo 2 (modelo de red neuronal)
     if hasattr(model2, 'get_config'):
-        st.write("##### Hiperparámetros del modelo de red neuronal (TensorFlow/Keras)uh")
+        st.write("##### Hiperparámetros del modelo de red neuronal (TensorFlow/Keras)")
         
         # Obtener los hiperparámetros de la red neuronal
         model2_params = []
