@@ -353,7 +353,8 @@ if st.sidebar.checkbox("Gráficos dinámicos"):
         sns.boxplot(data=heartdisease, x=x_var, y=y_var, ax=ax)
         st.pyplot(fig)
 
-st.sidebar.header("Transformacion de datos y modelos de predicción")
+st.sidebar.header("Transformación de datos y modelos de predicción")
+
 # Copiar el DataFrame para evitar modificar el original
 if 'heartdisease_copy' not in st.session_state:
     st.session_state.heartdisease_copy = heartdisease.copy()
