@@ -489,7 +489,7 @@ if st.sidebar.checkbox("Utilizar arboles de decisión"):
                 else:
                     # Inicializar con 0.0 si no está en session_state
                     if f"input_{col}" not in st.session_state:
-                        st.session_state[f"input_{col}"] = 0.0
+                        st.session_state[f"input_{col}"] = 0
         
                     input_value = cols[j].text_input(
                         f"{col}", value=str(st.session_state[f"input_{col}"]),
