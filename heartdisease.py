@@ -505,9 +505,9 @@ if st.sidebar.checkbox("Utilizar arboles de decisión"):
         
                     input_value = cols[j].text_input(
                         f"{col}", 
-                        value=str(st.session_state[f"input_{col}"]),
+                        value=str(st.session_state.get(f"input_{col}", "0.0")),
                         help=column_types.get(col, ""),
-                        key=f"input_{col}"  # Clave única basada en el nombre de la columna
+                        key=f"input_{col}"
                     )
 
         
