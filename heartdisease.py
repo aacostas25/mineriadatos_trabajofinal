@@ -816,7 +816,7 @@ if st.sidebar.checkbox("Mostrar hiperparámetros del modelo"):
         model2_params = []
         for layer in model2.layers:
             layer_info = {
-                "Capa": layer._class.name_,  # Nombre de la capa (ej. Dense, Conv2D)
+                "Capa": layer.__class__.__name__,  # Nombre de la capa (ej. Dense, Conv2D)
                 "Hiperparámetros": layer.get_config()  # Obtiene la configuración de la capa
             }
             model2_params.append(layer_info)
