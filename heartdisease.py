@@ -459,55 +459,89 @@ if st.sidebar.checkbox("Utilizar arboles de decisión"):
         datos_pordefecto1(data_model1)
         
     elif selected_column=='Manual':             
-        # Crear DataFrame inicial con valores numéricos en 0 y categóricos con el primer valor de la lista
-        data = {col: [0.0] for col in column_names}  # Inicializar numéricos en 0
-        for col in categorical_columns:
-            data[col] = [categorical_columns[col][0]]  # Inicializar con el primer valor de la lista
+         # Título de la aplicación
+        st.write("### Formulario de ingreso de datos para predicción")
         
-        df = pd.DataFrame(data)
+        # Crear el formulario
+        input_data = {}
+        num_columns = 3  # Definir el número de columnas para organizar los campos
         
-        # Convertir columnas categóricas a tipo "category" para que se muestren como dropdown en st.data_editor
-        for col in categorical_columns:
-            df[col] = df[col].astype("category")
+        for i in range(0, len(column_names), num_columns):
+            cols = st.columns(num_columns)
+            for j, col in enumerate(column_names[i:i+num_columns]):
+                if col in categorical_columns:
+                    # Inicializar con el primer valor de la lista si no está en session_state
+                    if f"input_{col}" not in st.session_state:
+                        st.session_state[f"input_{col}"] = categorical_columns[col][0]
+                
+                    # PASO 2: Convertir el valor en session_state a string si es necesario
+                    input_value = st.session_state[f"input_{col}"]
+                    if isinstance(input_value, float):  # Evitar errores con índices de selectbox
+                        input_value = str(int(input_value))  # Convertir a string si es necesario
+                
+                    input_value = cols[j].selectbox(
+                        f"{col}", 
+                        options=categorical_columns[col], 
+                        index=categorical_columns[col].index(input_value) if input_value in categorical_columns[col] else 0, 
+                        help=column_types.get(col, "")
+                    )
         
-        # Mostrar la tabla editable en Streamlit
-        st.write("### Introduce los datos para la predicción:")
-        edited_df = st.data_editor(df, key="editable_table")
+                else:
+                    # Inicializar con 0.0 si no está en session_state
+                    if f"input_{col}" not in st.session_state:
+                        st.session_state[f"input_{col}"] = 0.0
         
-        # Mostrar la tabla actualizada
-        st.write("#### Datos ingresados:")
-        st.write(edited_df)
+                    input_value = cols[j].text_input(
+                        f"{col}", value=str(st.session_state[f"input_{col}"]),
+                        help=column_types.get(col, "")
+                    )
         
-        # Botón para generar la predicción
+                    try:
+                        input_value = float(input_value)
+                    except ValueError:
+                        input_value = 0.0
+        
+                # Guardar el valor en session_state y en input_data
+                st.session_state[f"input_{col}"] = input_value
+                input_data[col] = input_value
+        
+        st.write("### Datos ingresados")
+        
+        # Procesar los datos en un formato adecuado
+        processed_data = [
+            str(value) if col in categorical_columns else float(value) 
+            for col, value in input_data.items()
+        ]
+        
+        # Convertir la lista en un numpy array
+        input_array = np.array(processed_data, dtype=object)  # dtype=object mantiene tipos mixtos       
+
         if st.button("Realizar predicción"):
             st.write("Procesando los datos para la predicción...")
             # Mostrar los datos originales
             st.write(" **Datos originales:**")
-            st.write(edited_df)
-            
+            st.write(input_array)
             encoder, numerical_columns = load_encoder()
-            
             # Simulación de datos nuevos
-            new_data = edited_df
+            new_data = input_array   
+            if not isinstance(new_data, pd.DataFrame):
+                new_data = pd.DataFrame([new_data], columns=column_names)
+            
+            # Seleccionar solo las variables categóricas
+            new_data_categorical = new_data.loc[:, encoder.feature_names_in_]
             # Separar variables numéricas y categóricas
-            new_data_categorical = new_data[encoder.feature_names_in_]  # Mantiene solo las categóricas
-            new_data_numerical = new_data[numerical_columns]  # Mantiene solo las numéricas
-            
+            new_data_numerical = new_data[numerical_columns]  # Mantiene solo las numéricas            
             # Codificar las variables categóricas
-            encoded_array = encoder.transform(new_data_categorical)
-            
+            encoded_array = encoder.transform(new_data_categorical)            
             # Convertir la salida a DataFrame con nombres de columnas codificadas
-            encoded_df = pd.DataFrame(encoded_array, columns=encoder.get_feature_names_out())
-            
+            encoded_df = pd.DataFrame(encoded_array, columns=encoder.get_feature_names_out())            
             # Concatenar las variables numéricas con las categóricas codificadas
-            final_data = pd.concat([new_data_numerical, encoded_df], axis=1)
-    
+            final_data = pd.concat([new_data_numerical, encoded_df], axis=1)    
             prediction=model1.predict(final_data)
             if prediction==1:
                 st.write("Predicción del modelo:","Cath", prediction)
             else:
                 st.write("Predicción del modelo:","Normal", prediction)
-
 
 
 
@@ -527,56 +561,85 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
         datos_pordefecto2(data_model2) 
     
     elif selected_column=='Manual':
-        # Crear DataFrame inicial con valores numéricos en 0 y categóricos con el primer valor de la lista
-        data = {col: [0.0] for col in column_names}  # Inicializar numéricos en 0
-        for col in categorical_columns:
-            data[col] = [categorical_columns[col][0]]  # Inicializar con el primer valor de la lista
+         # Título de la aplicación
+        st.write("### Formulario de ingreso de datos para predicción")
         
-        df = pd.DataFrame(data)
+        # Crear el formulario
+        input_data = {}
+        num_columns = 3  # Definir el número de columnas para organizar los campos
         
-        # Convertir columnas categóricas a tipo "category" para que se muestren como dropdown en st.data_editor
-        for col in categorical_columns:
-            df[col] = df[col].astype("category")
+        for i in range(0, len(column_names), num_columns):
+            cols = st.columns(num_columns)
+            for j, col in enumerate(column_names[i:i+num_columns]):
+                if col in categorical_columns:
+                    # Inicializar con el primer valor de la lista si no está en session_state
+                    if f"input_{col}" not in st.session_state:
+                        st.session_state[f"input_{col}"] = categorical_columns[col][0]
+                
+                    # PASO 2: Convertir el valor en session_state a string si es necesario
+                    input_value = st.session_state[f"input_{col}"]
+                    if isinstance(input_value, float):  # Evitar errores con índices de selectbox
+                        input_value = str(int(input_value))  # Convertir a string si es necesario
+                
+                    input_value = cols[j].selectbox(
+                        f"{col}", 
+                        options=categorical_columns[col], 
+                        index=categorical_columns[col].index(input_value) if input_value in categorical_columns[col] else 0, 
+                        help=column_types.get(col, "")
+                    )
         
-        # Mostrar la tabla editable en Streamlit
-        st.write("### Introduce los datos para la predicción:")
-        edited_df = st.data_editor(df, key="editable_table")
+                else:
+                    # Inicializar con 0.0 si no está en session_state
+                    if f"input_{col}" not in st.session_state:
+                        st.session_state[f"input_{col}"] = 0
         
-        # Mostrar la tabla actualizada
-        st.write("#### Datos ingresados:")
-        st.write(edited_df)
+                    input_value = cols[j].text_input(
+                        f"{col}", value=str(st.session_state[f"input_{col}"]),
+                        help=column_types.get(col, "")
+                    )
         
-        # Botón para generar la predicción
+                    try:
+                        input_value = float(input_value)
+                    except ValueError:
+                        input_value = 0.0
+        
+                # Guardar el valor en session_state y en input_data
+                st.session_state[f"input_{col}"] = input_value
+                input_data[col] = input_value
+        
+        st.write("### Datos ingresados")
+        
+        # Procesar los datos en un formato adecuado
+        processed_data = [
+            str(value) if col in categorical_columns else float(value) 
+            for col, value in input_data.items()
+        ]
+        
+        # Convertir la lista en un numpy array
+        input_array = np.array(processed_data, dtype=object)  # dtype=object mantiene tipos mixtos       
+
         if st.button("Realizar predicción"):
             st.write("Procesando los datos para la predicción...")
             # Mostrar los datos originales
             st.write(" **Datos originales:**")
-            st.write(edited_df)
-            
+            st.write(input_array)
             encoder, numerical_columns = load_encoder()
-            
             # Simulación de datos nuevos
-            new_data = edited_df
+            new_data = input_array   
+            if not isinstance(new_data, pd.DataFrame):
+                new_data = pd.DataFrame([new_data], columns=column_names)
+            # Seleccionar solo las variables categóricas
+            new_data_categorical = new_data.loc[:, encoder.feature_names_in_]
             # Separar variables numéricas y categóricas
-            new_data_categorical = new_data[encoder.feature_names_in_]  # Mantiene solo las categóricas
-            new_data_numerical = new_data[numerical_columns]  # Mantiene solo las numéricas
-            
+            new_data_numerical = new_data[numerical_columns]  # Mantiene solo las numéricas            
             # Codificar las variables categóricas
-            encoded_array = encoder.transform(new_data_categorical)
-            
+            encoded_array = encoder.transform(new_data_categorical)            
             # Convertir la salida a DataFrame con nombres de columnas codificadas
-            encoded_df = pd.DataFrame(encoded_array, columns=encoder.get_feature_names_out())
-            
+            encoded_df = pd.DataFrame(encoded_array, columns=encoder.get_feature_names_out())            
             # Concatenar las variables numéricas con las categóricas codificadas
-            final_data = pd.concat([new_data_numerical, encoded_df], axis=1)
-    
+            final_data = pd.concat([new_data_numerical, encoded_df], axis=1)    
             prediction=model2.predict(final_data)
             if prediction==1:
                 st.write("Predicción del modelo:","Cath", prediction)
             else:
                 st.write("Predicción del modelo:","Normal", prediction)
-
-        
-
-    
-
