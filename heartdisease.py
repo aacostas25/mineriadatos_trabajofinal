@@ -25,8 +25,6 @@ def load_encoder():
     return encoder, numerical_columns
 
 def load_model_1():
-    """Cargar el modelo y sus pesos desde el archivo model_weights.pkl."""
-    # nombre de la red neuronal
     filename = 'model_trained_classifier.pkl.gz'
     with gzip.open(filename, 'rb') as f:
         model1 = pickle.load(f)
@@ -101,17 +99,34 @@ column_names = [
             "Exertional CP", "LowTH Ang", "Q Wave", "St Elevation", "St Depression", 
     "Tinversion", "LVH", "Poor R Progression",
             "BBB", "FBS", "CR", "TG", "LDL", "HDL", "BUN", "ESR", "HB", "K", "Na", 
-    "WBC", "Lymph", "Neut", "PLT", "EF-TTE",
+    "WBC", "Lymph", "Neut", "PLT", "EF-TTE", "VHD",
             "Region RWMA"
         ]
 categorical_columns = {
-            "Sex": ["Male", "Female"],"DM": [0,1],"HTN":[0,1],"Current Smoker": [0, 1],"EX-Smoker": [0, 1],"FH": [0, 1],"Obesity": ["Y", "N"],
-            "CRF": ["Y", "N"],"CVA": ["Y", "N"],"Airway disease": ["Y", "N"],"Thyroid Disease": ["Y", "N"],"CHF": ["Y", "N"],"Edema": [0,1],
+            "Sex": ["Male", "Female"], "DM": [0,1], "HTN": [0,1], "Current Smoker": [0, 1],"EX-Smoker": [0, 1],"FH": [0, 1],"Obesity": ["Y", "N"],
+            "CRF": ["Y", "N"],"CVA": ["Y", "N"],"Airway disease": ["Y", "N"],"Thyroid Disease": ["Y", "N"],"CHF": ["Y", "N"],"DLP":["Y","N"],"Edema": [0,1],
             "Weak Peripheral Pulse": ["Y","N"],"Lung rales": ["Y","N"],"Systolic Murmur": ["Y","N"],"Diastolic Murmur": ["Y","N"],"Typical Chest Pain": [0,1],
-            "Dyspnea": ["Y","N"],"Function Class": [0,1,2,3],"Atypical": ["Y","N"],"Nonanginal": ["Y","N"],"LowTH Ang": ["Y","N"],"Q Wave": [0,1],
+            "Dyspnea": ["Y","N"],"Function Class": [0,1,2,3],"Atypical": ["Y","N"],"Nonanginal": ["Y","N"], "Exertional CP":["N","Y"],"LowTH Ang": ["Y","N"],"Q Wave": [0,1],
             "St Elevation": [0,1],"St Depression": [0, 1],"Tinversion": [0, 1],"LVH": ["Y", "N"],"Poor R Progression": ["Y", "N"],"BBB": ["LBBB", "N","RBBB"], 
             "Region RWMA": [0,1,2,3,4],"VHD": ["mild","Moderate","N","Severe"]
         }
+column_types = {
+    "Age": "Edad en años.", "Length": "Estatura en cm.", "Weight": "Peso en kg.", "Sex": "Sexo de la persona.",
+    "BMI": "Índice de masa corporal.", "DM": "Diabetes Mellitus.", "HTN": "Hipertensión.", "Current Smoker": "Fumador actual.",
+    "EX-Smoker": "Ex-fumador.", "FH": "Historial familiar.", "Obesity": "Obesidad.", "CRF": "Insuficiencia renal crónica.",
+    "DLP": "Dislipidemia.", "CHF": "Insuficiencia cardíaca congestiva.", "Thyroid Disease": "Enfermedad tiroidea.",
+    "Airway disease": "Enfermedad de las vías respiratorias.", "CVA": "Accidente cerebrovascular.", "Typical Chest Pain": "Dolor torácico típico.",
+    "Edema": "Edema.", "Diastolic Murmur": "Soplo diastólico.", "Systolic Murmur": "Soplo sistólico.", "Dyspnea": "Disnea.",
+    "Function Class": "Clase funcional.", "PR": "Pulso en ppm.", "BP": "Presión arterial en mmHg.", "Weak Peripheral Pulse": "Pulso periférico débil.",
+    "Lung rales": "Estertores pulmonares.", "Atypical": "Dolor torácico atípico.", "Nonanginal": "Dolor torácico no anginoso.",
+    "Exertional CP": "Dolor torácico por esfuerzo.", "LowTH Ang": "Angina de umbral bajo.", "Q Wave": "Onda Q.", "St Elevation": "Elevación del segmento ST.",
+    "St Depression": "Depresión del segmento ST.", "Tinversion": "Inversión de la onda T.", "Poor R Progression": "Mala progresión de la onda R.",
+    "BBB": "Bloqueo de rama.", "BUN": "Nitrógeno ureico en sangre.", "ESR": "Velocidad de sedimentación globular.", "HB": "Hemoglobina.",
+    "WBC": "Recuento de glóbulos blancos.", "Lymph": "Linfocitos.", "Neut": "Neutrófilos.", "PLT": "Plaquetas.",
+    "LVH": "Hipertrofia ventricular izquierda.", "Na": "Sodio.", "K": "Potasio.", "HDL": "Lipoproteínas de alta densidad.",
+    "LDL": "Lipoproteínas de baja densidad.", "TG": "Triglicéridos.", "CR": "Creatinina en mg/dl.", "FBS": "Glucosa en ayunas en mg/dl.",
+    "EF-TTE": "Fracción de eyección en porcentaje.", "Region RWMA": "Anormalidades del movimiento regional de la pared.", "VHD":"Enfermedad valvular del corazón."
+}
 
 heartdisease = pd.read_csv('heartdisease.csv')
 
