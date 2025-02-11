@@ -592,12 +592,15 @@ if st.sidebar.checkbox("Utilizar arboles de decisión"):
 
             # Codificar las variables categóricas
             encoded_array = encoder.transform(new_data_categorical)
+            st.write("array: ",encoded_array)
 
             # Convertir la salida a DataFrame con nombres de columnas codificadas
             encoded_df = pd.DataFrame(encoded_array, columns=encoder.get_feature_names_out())
+            st.write("df: ",encoded_df)
 
             # Concatenar las variables numéricas con las categóricas codificadas
             final_data = pd.concat([new_data_numerical, encoded_df], axis=1)
+            st.write("Final: ",final_data)
 
             # Realizar la predicción
             prediction = model1.predict(final_data)
@@ -606,6 +609,7 @@ if st.sidebar.checkbox("Utilizar arboles de decisión"):
                 st.write("Predicción del modelo:","Cath", prediction)
             else:
                 st.write("Predicción del modelo:","Normal", prediction)
+
 
 # Modelo de redes neuronales
 if st.sidebar.checkbox("Utilizar redes Neuronales"): 
@@ -711,6 +715,52 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
                 st.write("Predicción del modelo:","Cath", prediction)
             else:
                 st.write("Predicción del modelo:","Normal", prediction)
+
+    elif selected_column == 'Cargar desde Excel':
+        st.write("### Cargar archivo Excel para la predicción")
+        uploaded_file = st.file_uploader("Cargar archivo Excel", type=["xlsx"])
+        
+        if uploaded_file is not None:
+            # Leer el archivo Excel
+            df_excel = pd.read_excel(uploaded_file)
+            
+            # Mostrar las primeras filas para ver los datos
+            st.write("### Datos cargados del archivo Excel:")
+            st.write(df_excel.head())
+            
+            # Pedir al usuario que seleccione la fila (podría ser por índice o número de fila)
+            row_number = st.number_input("Selecciona el número de fila para la predicción", min_value=0, max_value=len(df_excel)-1, value=0)
+            
+            # Seleccionar la fila correspondiente
+            selected_row = df_excel.iloc[row_number, :]
+
+            if st.button("Realizar predicción",key="modelo2_predic_excel"):
+                st.write("Procesando los datos para la predicción...")
+                # Mostrar los datos originales
+                st.write(" **Datos originales:**")
+                # st.write(input_array)
+                encoder, numerical_columns = load_encoder()
+                # Simulación de datos nuevos
+                new_data = selected_row
+                if not isinstance(new_data, pd.DataFrame):
+                    new_data = pd.DataFrame([new_data], columns=column_names)
+                # Seleccionar solo las variables categóricas
+                new_data_categorical = new_data.loc[:, encoder.feature_names_in_]
+                # Separar variables numéricas y categóricas
+                new_data_numerical = new_data[numerical_columns]  # Mantiene solo las numéricas            
+                # Codificar las variables categóricas
+                encoded_array = encoder.transform(new_data_categorical)            
+                # Convertir la salida a DataFrame con nombres de columnas codificadas
+                encoded_df = pd.DataFrame(encoded_array, columns=encoder.get_feature_names_out())            
+                # Concatenar las variables numéricas con las categóricas codificadas
+                final_data = pd.concat([new_data_numerical, encoded_df], axis=1)  
+                prediction=np.argmax(model2.predict(final_data))
+                st.write(model2.predict(final_data))
+                if prediction==1:
+                    st.write("Predicción del modelo:","Cath", prediction)
+                else:
+                    st.write("Predicción del modelo:","Normal", prediction)
+    
 
 additional_params = {
     'Depth': 1,
