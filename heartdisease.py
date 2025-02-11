@@ -57,15 +57,16 @@ model1=load_model_1()
 model2=load_model_2()
 
 def datos_pordefecto1(data_model):
-    n=int(data_model[-1])               
+    n=int(data_model[-1])            
+    m=data_model[-1]
     prediction1 = int(model1.predict(df.iloc[n,:].to_frame().T))
     if prediction1==1 and int(y_test[n])==1:
-        st.write("De acuerdo con el modelo la persona",n,"sufre de la enfermedad arterial coronaria (Cath):", prediction1)
-        st.write("Clasificación real de la persona",n,":", y_test[n])
+        st.write("De acuerdo con el modelo la persona",m,"sufre de la enfermedad arterial coronaria (Cath):", prediction1)
+        st.write("Clasificación real de la persona",m,":", y_test[n])
         st.write("¡El modelo acertó! :worried:")                    
     elif prediction1==0 and int(y_test[n])==0:
-        st.write("De acuerdo con el modelo la persona",n,"no sufre de la enfermedad arterial coronaria (Normal):", prediction1)
-        st.write("Clasificación real de la persona",n,":", y_test[n])
+        st.write("De acuerdo con el modelo la persona",m,"no sufre de la enfermedad arterial coronaria (Normal):", prediction1)
+        st.write("Clasificación real de la persona",m,":", y_test[n])
         st.write("¡El modelo acertó! :partying_face:")
     else:
         st.write("Predicción del modelo:", prediction1)
@@ -78,12 +79,12 @@ def datos_pordefecto2(data_model):
     prediction2 = int(np.argmax(model2.predict(df.iloc[n,:].to_frame().T)))
     # st.write("Predicción: ",model2.predict(final_data))
     if prediction2==1 and int(y_test[n])==1:
-        st.write("De acuerdo con el modelo la persona",n,"sufre de la enfermedad arterial coronaria (Cath):", prediction2)
-        st.write("Clasificación real de la persona",n,":", y_test[n])
+        st.write("De acuerdo con el modelo la persona",m,"sufre de la enfermedad arterial coronaria (Cath):", prediction2)
+        st.write("Clasificación real de la persona",m,":", y_test[n])
         st.write("¡El modelo acertó! :worried:")                    
     elif prediction2==0 and int(y_test[n])==0:
-        st.write("De acuerdo con el modelo la persona",n,"no sufre de la enfermedad arterial coronaria (Cath):", prediction2)
-        st.write("Clasificación real de la persona",n,":", y_test[n])
+        st.write("De acuerdo con el modelo la persona",m,"no sufre de la enfermedad arterial coronaria (Cath):", prediction2)
+        st.write("Clasificación real de la persona",m,":", y_test[n])
         st.write("¡El modelo acertó! :partying_face:")
     else:
         st.write("Predicción del modelo:", prediction2)
