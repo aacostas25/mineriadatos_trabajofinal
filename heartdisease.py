@@ -565,7 +565,7 @@ if st.sidebar.checkbox("Utilizar arboles de decisión"):
                 st.write("De acuerdo con el modelo la persona no sufre de la enfermedad arterial coronaria (Normal):", prediction)
                 
     elif selected_column == 'Cargar desde Excel':
-        st.write("### Cargar archivo Excel para la predicción")
+        st.write("##### Cargar archivo Excel para la predicción")
         uploaded_file = st.file_uploader("Cargar archivo Excel", type=["xlsx"])
         
         if uploaded_file is not None:
@@ -621,18 +621,18 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
     El modelo utilizado consiste en una red neuronal de una capa con 32 neuronas de entrada.
     La base de datos fue codificada con One Hot Encoder y estandarizada con StandardScaler.
     """)
-    st.write("### Indique si desea hacer una predicción de manera manual, usar datos por defecto o cargar una fila desde un archivo Excel")
+    st.write("#### Indique si desea hacer una predicción de manera manual, usar datos por defecto o cargar una fila desde un archivo Excel")
     selected_column = st.selectbox("Selecciona un método para la predicción", ['Por defecto','Manual','Cargar desde Excel'],key="madelo2_metodo_prediccion")
     
     
     if selected_column=='Por defecto':             
-        st.write("### Indique los datos por defecto que desea uasr para la predicción")
+        st.write("##### Indique los datos por defecto que desea uasr para la predicción")
         data_model2 = st.selectbox("Selecciona un método para la predicción", ['Datos 1','Datos 2','Datos 3','Datos 4','Datos 5','Datos 6','Datos 7','Datos 8','Datos 9','Datos 10'],key="modelo2_eleccion_datos")
         datos_pordefecto2(data_model2) 
     
     elif selected_column=='Manual':
         # Título de la aplicación
-        st.write("### Formulario de ingreso de datos para predicción")
+        st.write("##### Formulario de ingreso de datos para predicción")
         
         # Crear el formulario
         input_data = {}
@@ -719,7 +719,7 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
                 st.write("De acuerdo con el modelo la persona no sufre de la enfermedad arterial coronaria (Normal):", prediction)
 
     elif selected_column == 'Cargar desde Excel':
-        st.write("### Cargar archivo Excel para la predicción")
+        st.write("##### Cargar archivo Excel para la predicción")
         uploaded_file = st.file_uploader("Cargar archivo Excel", type=["xlsx"])
         
         if uploaded_file is not None:
@@ -739,8 +739,6 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
             if st.button("Realizar predicción",key="modelo2_predic_excel"):
                 st.write("Procesando los datos para la predicción...")
                 # Mostrar los datos originales
-                st.write(" **Datos originales:**")
-                # st.write(input_array)
                 encoder, numerical_columns = load_encoder()
                 # Simulación de datos nuevos
                 new_data = selected_row
