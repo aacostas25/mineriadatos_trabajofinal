@@ -63,16 +63,16 @@ def datos_pordefecto1(data_model):
     if prediction1==1 and int(y_test[n])==1:
         st.write("De acuerdo con el modelo la persona",m,"sufre de la enfermedad arterial coronaria (Cath):", prediction1)
         st.write("Clasificación real de la persona",m,":", y_test[n])
-        st.write("¡El modelo acertó! :worried:")                    
+        st.write("¡El modelo acertó!") # :worried:")                    
     elif prediction1==0 and int(y_test[n])==0:
         st.write("De acuerdo con el modelo la persona",m,"no sufre de la enfermedad arterial coronaria (Normal):", prediction1)
         st.write("Clasificación real de la persona",m,":", y_test[n])
-        st.write("¡El modelo acertó! :partying_face:")
+        st.write("¡El modelo acertó!") # :partying_face:")
     else:
         st.write("Predicción del modelo:", prediction1)
         st.write("Clasificación real:", y_test[n])
         st.write("¡El modelo falló...! ")
-        st.write("❌ ERROR: Modelo sobreexplotado 💀. Reduciendo tareas... 🔄")
+        # st.write("❌ ERROR: Modelo sobreexplotado 💀. Reduciendo tareas... 🔄")
         
 def datos_pordefecto2(data_model):
     n=int(data_model[-1])          
@@ -80,19 +80,19 @@ def datos_pordefecto2(data_model):
     prediction2 = int(np.argmax(model2.predict(df.iloc[n,:].to_frame().T)))
     # st.write("Predicción: ",model2.predict(final_data))
     if prediction2==1 and int(y_test[n])==1:
-        st.write("De acuerdo con el modelo la persona",m,"sufre de la enfermedad arterial coronaria (Cath):", prediction2)
+        st.write("De acuerdo con el modelo la persona",m,"sufre de la enfermedad arterial coronaria (Normal):", prediction2)
         st.write("Clasificación real de la persona",m,":", y_test[n])
-        st.write("¡El modelo acertó! :worried:")                    
+        st.write("¡El modelo acertó!") # :worried:")                    
     elif prediction2==0 and int(y_test[n])==0:
         st.write("De acuerdo con el modelo la persona",m,"no sufre de la enfermedad arterial coronaria (Cath):", prediction2)
         st.write("Clasificación real de la persona",m,":", y_test[n])
-        st.write("¡El modelo acertó! :partying_face:")
+        st.write("¡El modelo acertó!") # :partying_face:")
     else:
         st.write("Predicción del modelo:", prediction2)
         st.write("Clasificación real:", y_test[n])
         st.write("¡El modelo falló...! ")
-        st.write("❌ ERROR: Modelo sobreajustado 💀. Reestableciendo las tres leyes de la robótica... 🔄")
-        st.write("❌ ERROR FATAL: Sobrecalentamiento neuronal 🔥. Reconstruyendo capas... 🔄")
+        # st.write("❌ ERROR: Modelo sobreajustado 💀. Reestableciendo las tres leyes de la robótica... 🔄")
+        # st.write("❌ ERROR FATAL: Sobrecalentamiento neuronal 🔥. Reconstruyendo capas... 🔄")
     
 
 column_names = [
