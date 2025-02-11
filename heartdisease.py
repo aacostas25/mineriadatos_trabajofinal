@@ -459,11 +459,8 @@ if st.sidebar.checkbox("Escalado de datos"):
 #Modelo Clasico
 if st.sidebar.checkbox("Utilizar arboles de decisión"):
     st.write("### Arboles de decisión")
-    st.write("""
-    El modelo utilizado consiste en un arbol con una profundidad de 3.
-    La base de datos fue codificada con One Hot Encoder y los datos no fueron escalados.
-    """)
-    
+    st.write("""El modelo utilizado consiste en un arbol con una profundidad de 3.
+    La base de datos fue codificada con One Hot Encoder y los datos no fueron escalados.""")
     st.write("### Indique si desea hacer una predicción de manera manual o usar datos por defecto")
     selected_column = st.selectbox("Selecciona un método para la predicción", ['Por defecto','Manual'],key="madelo1_metodo_prediccion")
     
@@ -508,7 +505,8 @@ if st.sidebar.checkbox("Utilizar arboles de decisión"):
         
                     input_value = cols[j].text_input(
                         f"{col}", value=str(st.session_state[f"input_{col}"]),
-                        help=column_types.get(col, "")
+                        help=column_types.get(col, ""),
+                        key="Arbol"
                     )
         
                     try:
@@ -608,7 +606,8 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
         
                     input_value = cols[j].text_input(
                         f"{col}", value=str(st.session_state[f"input_{col}"]),
-                        help=column_types.get(col, "")
+                        help=column_types.get(col, ""),
+                        key="Nueronal"
                     )
         
                     try:
