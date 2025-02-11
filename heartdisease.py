@@ -561,7 +561,7 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
         datos_pordefecto2(data_model2) 
     
     elif selected_column=='Manual':
-         # Título de la aplicación
+        # Título de la aplicación
         st.write("### Formulario de ingreso de datos para predicción")
         
         # Crear el formulario
@@ -575,12 +575,10 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
                     # Inicializar con el primer valor de la lista si no está en session_state
                     if f"input_{col}" not in st.session_state:
                         st.session_state[f"input_{col}"] = categorical_columns[col][0]
-                
                     # PASO 2: Convertir el valor en session_state a string si es necesario
                     input_value = st.session_state[f"input_{col}"]
                     if isinstance(input_value, float):  # Evitar errores con índices de selectbox
                         input_value = str(int(input_value))  # Convertir a string si es necesario
-                
                     input_value = cols[j].selectbox(
                         f"{col}", 
                         options=categorical_columns[col], 
@@ -638,7 +636,7 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
             encoded_df = pd.DataFrame(encoded_array, columns=encoder.get_feature_names_out())            
             # Concatenar las variables numéricas con las categóricas codificadas
             final_data = pd.concat([new_data_numerical, encoded_df], axis=1)    
-            prediction=model2.predict(final_data)
+            prediction=np.argmax(model2.predict(final_data))
             if prediction==1:
                 st.write("Predicción del modelo:","Cath", prediction)
             else:
