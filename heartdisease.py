@@ -534,7 +534,7 @@ if st.sidebar.checkbox("Utilizar arboles de decisión"):
         # Convertir a numpy array
         input_array = np.array(processed_data, dtype=object)
 
-        if st.button("Realizar predicción"):
+        if st.button("Realizar predicción",key="modelo1_predic"):
             st.write("Procesando los datos para la predicción...")
             # Mostrar los datos originales
             st.write(" **Datos originales:**")
@@ -642,7 +642,7 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
         # Convertir a numpy array
         input_array = np.array(processed_data, dtype=object)
 
-        if st.button("Realizar predicción"):
+        if st.button("Realizar predicción",key="modelo2_predic"):
             st.write("Procesando los datos para la predicción...")
             # Mostrar los datos originales
             st.write(" **Datos originales:**")
