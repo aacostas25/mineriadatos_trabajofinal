@@ -75,7 +75,8 @@ def datos_pordefecto1(data_model):
         st.write("❌ ERROR: Modelo sobreexplotado 💀. Reduciendo tareas... 🔄")
         
 def datos_pordefecto2(data_model):
-    n=int(data_model[-1])               
+    n=int(data_model[-1])          
+    m=data_model[-1]
     prediction2 = int(np.argmax(model2.predict(df.iloc[n,:].to_frame().T)))
     # st.write("Predicción: ",model2.predict(final_data))
     if prediction2==1 and int(y_test[n])==1:
