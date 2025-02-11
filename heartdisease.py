@@ -504,10 +504,12 @@ if st.sidebar.checkbox("Utilizar arboles de decisión"):
                         st.session_state[f"input_{col}"] = 0
         
                     input_value = cols[j].text_input(
-                        f"{col}", value=str(st.session_state[f"input_{col}"]),
+                        f"{col}", 
+                        value=str(st.session_state[f"input_{col}"]),
                         help=column_types.get(col, ""),
-                        key="arbol"
+                        key=f"input_{col}"  # Clave única basada en el nombre de la columna
                     )
+
         
                     try:
                         input_value = float(input_value)
@@ -606,8 +608,7 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
         
                     input_value = cols[j].text_input(
                         f"{col}", value=str(st.session_state[f"input_{col}"]),
-                        help=column_types.get(col, ""),
-                        key="nueronal"
+                        help=column_types.get(col, "")
                     )
         
                     try:
