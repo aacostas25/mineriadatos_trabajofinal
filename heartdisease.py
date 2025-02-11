@@ -618,8 +618,9 @@ if st.sidebar.checkbox("Utilizar redes Neuronales"):
     El modelo utilizado consiste en una red neuronal de una capa con 32 neuronas de entrada.
     La base de datos fue codificada con One Hot Encoder y estandarizada con StandardScaler.
     """)
-    st.write("### Indique si desea hacer una predicción de manera manual o usar datos por defecto")
-    selected_column = st.selectbox("Selecciona un método para la predicción", ['Por defecto','Manual'],key="madelo2_metodo_prediccion")
+    st.write("### Indique si desea hacer una predicción de manera manual, usar datos por defecto o cargar una fila desde un archivo Excel")
+    selected_column = st.selectbox("Selecciona un método para la predicción", ['Por defecto','Manual','Cargar desde Excel'],key="madelo2_metodo_prediccion")
+    
     
     if selected_column=='Por defecto':             
         st.write("### Indique los datos por defecto que desea uasr para la predicción")
