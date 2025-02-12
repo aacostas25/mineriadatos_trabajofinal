@@ -49,6 +49,7 @@ def load_model_1():
     
 def load_model_2():
     filename = 'best_model.pkl.gz'
+    tf.keras.backend.clear_session() 
     with gzip.open(filename, 'rb') as f:
         model2 = pickle.load(f)
     return model2
